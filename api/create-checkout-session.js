@@ -65,12 +65,9 @@ module.exports = async (req, res) => {
         allowed_countries: ['US'],
       },
 
-      // Optional: offer a flat shipping rate. Replace with a Shipping
-      // Rate ID from your Stripe Dashboard (Settings > Shipping rates),
-      // or remove this block if shipping is included in the $25 price.
-      // shipping_options: [
-      //   { shipping_rate: 'shr_xxxxxxxxxxxx' },
-      // ],
+      shipping_options: [
+  { shipping_rate: 'shr_1Tik98KZaxtIdT8i6BWh5oAB' },
+],
 
       success_url: `${SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${SITE_URL}/index.html`,
