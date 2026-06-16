@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Merch — Awakened Comics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void: #0a0a14;
+    --indigo: #1a1530;
+    --eclipse-edge: #3a2a5c;
+    --ember: #c0392b;
+    --ember-bright: #e74c3c;
+    --gold: #f0a830;
+    --bone: #f4ede0;
+    --bone-dim: #c9c2b8;
+    --star: #e9e6f5;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--void);
+    color: var(--bone);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px, var(--star), transparent),
+      radial-gradient(1px 1px at 120px 80px, var(--star), transparent),
+      radial-gradient(1.5px 1.5px at 250px 200px, var(--star), transparent),
+      radial-gradient(1px 1px at 90px 250px, var(--star), transparent),
+      radial-gradient(1.5px 1.5px at 320px 60px, var(--star), transparent),
+      radial-gradient(1px 1px at 200px 350px, var(--star), transparent);
+    background-size: 400px 400px;
+    opacity: 0.25;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .container{
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== NAV ===== */
+  .social-bar{
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,20,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--eclipse-edge);
+    padding: 12px 0;
+  }
+  .social-bar-inner{
+    max-width: 1140px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .nav-left{ display: flex; align-items: center; gap: 24px; }
+  .social-bar-brand{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.25em;
+    font-size: 16px; color: var(--gold); text-decoration: none; text-transform: uppercase;
+  }
+  .nav-links{ display: flex; gap: 4px; }
+  .nav-link{
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--bone-dim); text-decoration: none; padding: 6px 12px;
+    border-radius: 6px; transition: background 0.2s, color 0.2s;
+  }
+  .nav-link:hover{ background: rgba(255,255,255,0.06); color: var(--bone); }
+  .nav-link.active{ color: var(--gold); }
+
+  .social-links{ display: flex; align-items: center; gap: 10px; }
+  .social-link{
+    display: flex; align-items: center; gap: 7px; padding: 7px 14px;
+    border-radius: 999px; border: 1px solid var(--eclipse-edge);
+    background: rgba(255,255,255,0.03); color: var(--bone-dim);
+    text-decoration: none; font-size: 13px; font-weight: 500;
+    transition: background 0.2s, border-color 0.2s, color 0.2s; white-space: nowrap;
+  }
+  .social-link.ig:hover{ background: rgba(193,53,132,0.2); border-color: #c13584; color: #e87bb5; }
+  .social-link.tt:hover{ background: rgba(105,201,208,0.15); border-color: #69c9d0; color: #69c9d0; }
+  .social-link.yt:hover{ background: rgba(255,0,0,0.15); border-color: #ff0000; color: #ff4444; }
+  .social-label{ display: inline; }
+  @media(max-width:700px){ .social-label{ display:none; } .social-link{ padding:8px; } .nav-links{ display:none; } }
+
+  /* ===== PAGE HEADER ===== */
+  .page-header{
+    padding: 64px 0 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .eyebrow{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.35em;
+    font-size: 13px; color: var(--gold); text-transform: uppercase;
+    margin-bottom: 14px; display: inline-block;
+    border-bottom: 2px solid var(--gold); padding-bottom: 6px;
+  }
+  .page-header h1{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(48px, 8vw, 88px);
+    line-height: 0.95; letter-spacing: 0.02em; text-transform: uppercase;
+    background: linear-gradient(180deg, var(--star) 0%, var(--bone) 55%, var(--ember-bright) 130%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .page-header p{
+    margin-top: 16px; font-size: 17px; color: var(--bone-dim); max-width: 520px;
+  }
+
+  /* ===== FILTER TABS ===== */
+  .filter-bar{
+    display: flex; gap: 10px; flex-wrap: wrap;
+    padding: 32px 0 36px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 48px;
+  }
+  .filter-btn{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.18em;
+    font-size: 13px; text-transform: uppercase;
+    padding: 8px 18px; border-radius: 999px;
+    border: 1px solid var(--eclipse-edge);
+    background: rgba(255,255,255,0.02);
+    color: var(--bone-dim); cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .filter-btn:hover{ background: rgba(255,255,255,0.06); color: var(--bone); }
+  .filter-btn.active{
+    background: var(--gold); border-color: var(--gold);
+    color: var(--void);
+  }
+
+  /* ===== PRODUCT GRID ===== */
+  .product-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 80px;
+  }
+
+  .product-card{
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--eclipse-edge);
+    background: rgba(255,255,255,0.02);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+  }
+  .product-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px -16px rgba(0,0,0,0.7), 0 0 0 1px var(--eclipse-edge);
+    border-color: rgba(240,168,48,0.3);
+  }
+  .product-card[data-category].hidden{ display: none; }
+
+  /* Placeholder image area */
+  .product-img{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(135deg, var(--indigo), #0d0d22);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .product-img img{
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+  }
+  .product-img .placeholder-icon{
+    opacity: 0.12;
+  }
+  .product-img .placeholder-label{
+    position: absolute; bottom: 12px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em; font-size: 10px;
+    text-transform: uppercase; color: var(--bone-dim);
+    opacity: 0.5;
+  }
+  .product-badge{
+    position: absolute; top: 10px; left: 10px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+    background: var(--ember-bright); color: #fff;
+  }
+  .product-badge.new{ background: var(--gold); color: var(--void); }
+  .product-badge.soon{ background: var(--eclipse-edge); color: var(--bone-dim); }
+
+  .product-info{
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 8px; flex: 1;
+  }
+  .product-category{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.2em;
+    font-size: 10px; text-transform: uppercase; color: var(--gold); opacity: 0.8;
+  }
+  .product-name{
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+    font-size: 15px; color: var(--bone); line-height: 1.3;
+  }
+  .product-desc{
+    font-size: 13px; color: var(--bone-dim); line-height: 1.5; flex: 1;
+  }
+  .product-footer{
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .product-price{
+    font-family: 'Anton', sans-serif; font-size: 22px; color: var(--gold);
+  }
+  .product-btn{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.14em;
+    font-size: 13px; text-transform: uppercase;
+    padding: 8px 16px; border-radius: 6px; border: none;
+    background: linear-gradient(135deg, var(--gold), var(--ember-bright));
+    color: var(--void); cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .product-btn:hover{ opacity: 0.9; transform: translateY(-1px); }
+  .product-btn:disabled{
+    background: var(--eclipse-edge); color: var(--bone-dim); cursor: default;
+    transform: none; opacity: 1;
+  }
+
+  /* ===== SIZE MODAL ===== */
+  .modal-overlay{
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85); z-index: 500;
+    align-items: center; justify-content: center;
+    padding: 24px; backdrop-filter: blur(6px);
+  }
+  .modal-overlay.open{ display: flex; }
+  .modal{
+    background: var(--indigo); border: 1px solid var(--eclipse-edge);
+    border-radius: 12px; padding: 36px; max-width: 480px; width: 100%;
+    position: relative;
+  }
+  .modal-close{
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--bone);
+    font-size: 22px; cursor: pointer; opacity: 0.6; line-height: 1;
+  }
+  .modal-close:hover{ opacity: 1; }
+  .modal h3{
+    font-family: 'Anton', sans-serif; font-size: 28px;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .modal-category{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.2em;
+    font-size: 11px; color: var(--gold); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .modal-price{
+    font-family: 'Anton', sans-serif; font-size: 32px;
+    color: var(--gold); margin-bottom: 20px;
+  }
+
+  /* Size selector */
+  .size-label{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.2em;
+    font-size: 12px; text-transform: uppercase; color: var(--bone-dim);
+    margin-bottom: 10px; display: block;
+  }
+  .size-options{ display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .size-btn{
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 6px;
+    border: 1px solid var(--eclipse-edge); background: rgba(255,255,255,0.03);
+    color: var(--bone); cursor: pointer; transition: all 0.15s;
+    min-width: 48px; text-align: center;
+  }
+  .size-btn:hover{ border-color: var(--gold); color: var(--gold); }
+  .size-btn.selected{ background: var(--gold); border-color: var(--gold); color: var(--void); }
+
+  /* Qty row in modal */
+  .modal-qty-row{
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .modal-qty-label{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.2em;
+    font-size: 12px; text-transform: uppercase; color: var(--bone-dim);
+  }
+  .qty-btn{
+    width: 34px; height: 34px; border-radius: 6px;
+    border: 1px solid var(--eclipse-edge); background: rgba(255,255,255,0.03);
+    color: var(--bone); font-size: 18px; cursor: pointer;
+    transition: background 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .qty-btn:hover{ background: rgba(231,76,60,0.15); border-color: var(--ember); }
+  .qty-display{
+    font-family: 'Anton', sans-serif; font-size: 22px; min-width: 32px; text-align: center;
+  }
+
+  .modal-add-btn{
+    width: 100%; padding: 16px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--void);
+    background: linear-gradient(135deg, var(--gold), var(--ember-bright));
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 8px 24px -8px rgba(231,76,60,0.5);
+  }
+  .modal-add-btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 32px -8px rgba(231,76,60,0.65); }
+  .modal-note{ margin-top: 10px; font-size: 12px; color: var(--bone-dim); text-align: center; }
+  .modal-status{ margin-top: 8px; font-size: 13px; color: var(--gold); text-align: center; min-height: 18px; }
+
+  /* ===== COMING SOON BANNER ===== */
+  .coming-soon-banner{
+    background: linear-gradient(135deg, rgba(26,21,48,0.9), rgba(10,10,20,0.95));
+    border: 1px solid var(--eclipse-edge); border-radius: 10px;
+    padding: 40px; text-align: center; margin-bottom: 80px;
+  }
+  .coming-soon-banner h3{
+    font-family: 'Anton', sans-serif; font-size: 28px;
+    text-transform: uppercase; color: var(--star); margin-bottom: 10px;
+  }
+  .coming-soon-banner p{ color: var(--bone-dim); font-size: 15px; max-width: 480px; margin: 0 auto; }
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 0 48px; text-align: center;
+    color: var(--bone-dim); font-size: 13px; letter-spacing: 0.06em;
+  }
+  .foot-title{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.3em;
+    color: var(--gold); font-size: 14px; margin-bottom: 8px; text-transform: uppercase;
+  }
+  .foot-links{ display: flex; justify-content: center; gap: 24px; margin: 12px 0; }
+  .foot-links a{ color: var(--bone-dim); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+  .foot-links a:hover{ color: var(--gold); }
+
+  @media(max-width: 900px){ .product-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width: 500px){ .product-grid{ grid-template-columns: 1fr; } }
+
+  button:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="social-bar">
+  <div class="social-bar-inner">
+    <div class="nav-left">
+      <a href="index.html" class="social-bar-brand">Awakened</a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Comic</a>
+        <a href="merch.html" class="nav-link active">Merch</a>
+      </div>
+    </div>
+    <div class="social-links">
+      <a href="https://www.instagram.com/ezra_eliel/" target="_blank" rel="noopener" class="social-link ig" aria-label="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        <span class="social-label">Instagram</span>
+      </a>
+      <a href="https://www.tiktok.com/@ezra.eliel" target="_blank" rel="noopener" class="social-link tt" aria-label="TikTok">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        <span class="social-label">TikTok</span>
+      </a>
+      <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener" class="social-link yt" aria-label="YouTube">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.86 12l-6.11 3.52z"/></svg>
+        <span class="social-label">YouTube</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <span class="eyebrow">Red Blade Studioz · Official Merch</span>
+    <h1>The Drop</h1>
+    <p>Wear the world of Awakened. Limited runs, real art — tees, hoodies, posters, hats, and stickers straight from the studio.</p>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+
+    <!-- FILTER TABS -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="tshirt">T-Shirts</button>
+      <button class="filter-btn" data-filter="hoodie">Hoodies</button>
+      <button class="filter-btn" data-filter="poster">Posters</button>
+      <button class="filter-btn" data-filter="hat">Hats</button>
+      <button class="filter-btn" data-filter="sticker">Stickers</button>
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <!-- ============================================================
+         HOW TO ADD A NEW PRODUCT:
+         Copy one <div class="product-card"> block below, paste it
+         into the grid, and update:
+           data-category  → tshirt | hoodie | poster | hat | sticker
+           data-name      → product name shown in the modal
+           data-price     → price in cents (e.g. 3500 = $35.00)
+           data-stripe-price → your Stripe Price ID (price_xxx)
+           data-sizes     → comma-separated sizes, or "none" for no sizes
+           The placeholder SVG can be replaced with:
+           <img src="images/your-product-photo.jpg" alt="..." />
+         ============================================================ -->
+    <div class="product-grid" id="product-grid">
+
+      <!-- T-SHIRT 1 -->
+      <div class="product-card"
+        data-category="tshirt"
+        data-name="Awakened Logo Tee"
+        data-price="3000"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="S,M,L,XL,2XL">
+        <div class="product-img">
+          <!-- Replace with: <img src="images/tshirt-logo.jpg" alt="Awakened Logo Tee" /> -->
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+          <span class="product-badge new">New</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">T-Shirt</span>
+          <span class="product-name">Awakened Logo Tee</span>
+          <span class="product-desc">Classic fit, heavyweight cotton. The eclipse logo on the chest — understated but unmistakable.</span>
+          <div class="product-footer">
+            <span class="product-price">$30</span>
+            <button class="product-btn">Select Size</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- T-SHIRT 2 -->
+      <div class="product-card"
+        data-category="tshirt"
+        data-name="Eclipse Event Tee"
+        data-price="3000"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="S,M,L,XL,2XL">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">T-Shirt</span>
+          <span class="product-name">Eclipse Event Tee</span>
+          <span class="product-desc">The day everything changed. Graphic tee featuring original Awakened art from the Eclipse sequence.</span>
+          <div class="product-footer">
+            <span class="product-price">$30</span>
+            <button class="product-btn">Select Size</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOODIE 1 -->
+      <div class="product-card"
+        data-category="hoodie"
+        data-name="Awakened Pullover Hoodie"
+        data-price="5500"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="S,M,L,XL,2XL">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+          <span class="product-badge new">New</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">Hoodie</span>
+          <span class="product-name">Awakened Pullover Hoodie</span>
+          <span class="product-desc">Heavyweight fleece pullover. Eclipse logo embroidered on the chest, Red Blade Studioz on the sleeve.</span>
+          <div class="product-footer">
+            <span class="product-price">$55</span>
+            <button class="product-btn">Select Size</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOODIE 2 -->
+      <div class="product-card"
+        data-category="hoodie"
+        data-name="Red Blade Zip Hoodie"
+        data-price="6000"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="S,M,L,XL,2XL">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">Hoodie</span>
+          <span class="product-name">Red Blade Zip Hoodie</span>
+          <span class="product-desc">Full-zip heavyweight hoodie with Red Blade Studioz branding. Limited first run.</span>
+          <div class="product-footer">
+            <span class="product-price">$60</span>
+            <button class="product-btn">Select Size</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POSTER 1 -->
+      <div class="product-card"
+        data-category="poster"
+        data-name="Awakened: Beginnings Cover Print"
+        data-price="2000"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="none">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+          <span class="product-badge new">New</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">Poster</span>
+          <span class="product-name">Awakened: Beginnings Cover Print</span>
+          <span class="product-desc">Museum-quality 18×24" art print of the Issue #1 cover. Printed on heavyweight matte paper.</span>
+          <div class="product-footer">
+            <span class="product-price">$20</span>
+            <button class="product-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POSTER 2 -->
+      <div class="product-card"
+        data-category="poster"
+        data-name="Character Art Print — Electric"
+        data-price="2000"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="none">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">Poster</span>
+          <span class="product-name">Character Art Print — Electric</span>
+          <span class="product-desc">18×24" print of the electric power awakening artwork. Vivid full-color on matte paper.</span>
+          <div class="product-footer">
+            <span class="product-price">$20</span>
+            <button class="product-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HAT -->
+      <div class="product-card"
+        data-category="hat"
+        data-name="Awakened Snapback"
+        data-price="3500"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="One Size">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 18h18M3 18c0-5 2-9 9-9s9 4 9 9M12 9V3M8 3h8"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+          <span class="product-badge new">New</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">Hat</span>
+          <span class="product-name">Awakened Snapback</span>
+          <span class="product-desc">Structured snapback with embroidered Awakened eclipse logo on the front panel. One size fits all.</span>
+          <div class="product-footer">
+            <span class="product-price">$35</span>
+            <button class="product-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STICKER PACK -->
+      <div class="product-card"
+        data-category="sticker"
+        data-name="Character Sticker Pack"
+        data-price="1200"
+        data-stripe-price="price_REPLACE_ME"
+        data-sizes="none">
+        <div class="product-img">
+          <svg class="placeholder-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10-1.87 0-3-.48-4-1l-5 1 1-5c-.52-1-1-2.13-1-4A10 10 0 0 1 12 2z"/></svg>
+          <span class="placeholder-label">Add product photo</span>
+          <span class="product-badge new">New</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">Stickers</span>
+          <span class="product-name">Character Sticker Pack</span>
+          <span class="product-desc">6-pack of die-cut vinyl stickers featuring characters from Awakened. Waterproof and durable.</span>
+          <div class="product-footer">
+            <span class="product-price">$12</span>
+            <button class="product-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /product-grid -->
+
+    <!-- COMING SOON BANNER -->
+    <div class="coming-soon-banner">
+      <h3>More Drops Coming Soon</h3>
+      <p>Follow on Instagram and TikTok to be the first to know when new merch hits — limited quantities on every run.</p>
+    </div>
+
+  </div>
+</main>
+
+<!-- SIZE / ADD TO CART MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">&#10005;</button>
+    <div class="modal-category" id="modal-category"></div>
+    <h3 id="modal-name"></h3>
+    <div class="modal-price" id="modal-price"></div>
+
+    <div id="modal-size-section">
+      <span class="size-label">Select Size</span>
+      <div class="size-options" id="modal-sizes"></div>
+    </div>
+
+    <div class="modal-qty-row">
+      <span class="modal-qty-label">Qty</span>
+      <button class="qty-btn" id="modal-qty-minus">−</button>
+      <span class="qty-display" id="modal-qty-value">1</span>
+      <button class="qty-btn" id="modal-qty-plus">+</button>
+    </div>
+
+    <button class="modal-add-btn" id="modal-checkout-btn">Checkout — $0.00</button>
+    <p class="modal-note">Secure checkout powered by Stripe</p>
+    <p class="modal-status" id="modal-status"></p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p class="foot-title">Awakened · Red Blade Studioz</p>
+    <div class="foot-links">
+      <a href="index.html">Comic</a>
+      <a href="merch.html">Merch</a>
+      <a href="https://www.instagram.com/ezra_eliel/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.tiktok.com/@ezra.eliel" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>© 2026 Awakened Comics · Red Blade Studioz. All rights reserved. US shipping only.</p>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  // FILTER TABS
+  // ============================================================
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.product-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ============================================================
+  // MODAL
+  // ============================================================
+  const overlay     = document.getElementById('modal-overlay');
+  const modalName   = document.getElementById('modal-name');
+  const modalCat    = document.getElementById('modal-category');
+  const modalPrice  = document.getElementById('modal-price');
+  const modalSizes  = document.getElementById('modal-sizes');
+  const modalSizeSec= document.getElementById('modal-size-section');
+  const modalQtyVal = document.getElementById('modal-qty-value');
+  const modalBtn    = document.getElementById('modal-checkout-btn');
+  const modalStatus = document.getElementById('modal-status');
+
+  let currentProduct = null;
+  let selectedSize   = null;
+  let modalQty       = 1;
+
+  function openModal(card) {
+    currentProduct = {
+      name:        card.dataset.name,
+      price:       parseInt(card.dataset.price, 10),
+      stripePrice: card.dataset.stripePrice,
+      sizes:       card.dataset.sizes,
+      category:    card.querySelector('.product-category').textContent,
+    };
+    selectedSize = null;
+    modalQty = 1;
+
+    modalName.textContent  = currentProduct.name;
+    modalCat.textContent   = currentProduct.category;
+    modalPrice.textContent = '$' + (currentProduct.price / 100).toFixed(0);
+    modalQtyVal.textContent = '1';
+    modalStatus.textContent = '';
+    updateModalBtn();
+
+    // Build size buttons
+    modalSizes.innerHTML = '';
+    if (currentProduct.sizes === 'none') {
+      modalSizeSec.style.display = 'none';
+      selectedSize = 'N/A';
+    } else {
+      modalSizeSec.style.display = 'block';
+      currentProduct.sizes.split(',').forEach(size => {
+        const btn = document.createElement('button');
+        btn.className = 'size-btn';
+        btn.textContent = size.trim();
+        btn.addEventListener('click', () => {
+          modalSizes.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedSize = size.trim();
+          updateModalBtn();
+        });
+        modalSizes.appendChild(btn);
+      });
+    }
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function updateModalBtn() {
+    if (!currentProduct) return;
+    const total = ((currentProduct.price * modalQty) / 100).toFixed(2);
+    modalBtn.textContent = `Checkout — $${total}`;
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+  document.getElementById('modal-qty-minus').addEventListener('click', () => {
+    if (modalQty > 1) { modalQty--; modalQtyVal.textContent = modalQty; updateModalBtn(); }
+  });
+  document.getElementById('modal-qty-plus').addEventListener('click', () => {
+    if (modalQty < 10) { modalQty++; modalQtyVal.textContent = modalQty; updateModalBtn(); }
+  });
+
+  // Wire up all product buttons
+  cards.forEach(card => {
+    card.querySelector('.product-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      openModal(card);
+    });
+    card.addEventListener('click', () => openModal(card));
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  // ============================================================
+  // CHECKOUT
+  // To wire up: create a Stripe Price ID for each product in the
+  // Stripe Dashboard (Products → Add Product), then replace each
+  // data-stripe-price="price_REPLACE_ME" on the product cards
+  // with the real ID e.g. data-stripe-price="price_1AbcDef..."
+  // The /api/create-checkout-session endpoint handles the rest.
+  // ============================================================
+  modalBtn.addEventListener('click', async () => {
+    if (currentProduct.sizes !== 'none' && !selectedSize) {
+      modalStatus.textContent = 'Please select a size first.';
+      return;
+    }
+
+    modalBtn.disabled = true;
+    modalStatus.textContent = 'Redirecting to checkout...';
+
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          stripePrice: currentProduct.stripePrice,
+          quantity: modalQty,
+          productName: currentProduct.name + (selectedSize && selectedSize !== 'N/A' ? ` (${selectedSize})` : ''),
+          unitAmount: currentProduct.price,
+        })
+      });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else throw new Error('no url');
+    } catch {
+      modalStatus.textContent = 'Checkout not connected yet — add Stripe Price IDs to each product.';
+      modalBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
