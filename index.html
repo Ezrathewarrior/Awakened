@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Awakened: Beginnings — Print Comic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void: #0a0a14;
+    --indigo: #1a1530;
+    --eclipse-edge: #3a2a5c;
+    --ember: #c0392b;
+    --ember-bright: #e74c3c;
+    --gold: #f0a830;
+    --bone: #f4ede0;
+    --bone-dim: #c9c2b8;
+    --star: #e9e6f5;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--void);
+    color: var(--bone);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Starfield texture */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px, var(--star), transparent),
+      radial-gradient(1px 1px at 120px 80px, var(--star), transparent),
+      radial-gradient(1.5px 1.5px at 250px 200px, var(--star), transparent),
+      radial-gradient(1px 1px at 90px 250px, var(--star), transparent),
+      radial-gradient(1.5px 1.5px at 320px 60px, var(--star), transparent),
+      radial-gradient(1px 1px at 200px 350px, var(--star), transparent);
+    background-size: 400px 400px;
+    opacity: 0.25;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .container{
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position: relative;
+    padding: 64px 0 80px;
+    overflow: hidden;
+  }
+
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .eyebrow{
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.35em;
+    font-size: 13px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: inline-block;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 6px;
+  }
+
+  h1.title{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 9vw, 104px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, var(--star) 0%, var(--bone) 55%, var(--ember-bright) 130%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px rgba(231, 76, 60, 0.25);
+  }
+
+  .subtitle{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 2.4vw, 26px);
+    letter-spacing: 0.18em;
+    color: var(--bone-dim);
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+
+  .hero-copy{
+    margin-top: 28px;
+    font-size: 17px;
+    color: var(--bone-dim);
+    max-width: 480px;
+  }
+
+  .hero-copy strong{
+    color: var(--bone);
+  }
+
+  .tags{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .tag{
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border: 1px solid var(--eclipse-edge);
+    border-radius: 999px;
+    color: var(--bone-dim);
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* Cover art with cracked-panel signature treatment */
+  .cover-frame{
+    position: relative;
+    width: 100%;
+  }
+
+  .cover-clip{
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(240,168,48,0.25),
+      0 30px 80px -20px rgba(0,0,0,0.8),
+      0 0 120px -20px rgba(192,57,43,0.35);
+    clip-path: polygon(
+      0% 1%, 8% 0%, 35% 0.5%, 42% 0%, 60% 0.8%, 78% 0%, 100% 0.8%,
+      99.3% 25%, 100% 50%, 99.3% 76%, 100% 100%,
+      72% 99.5%, 50% 100%, 28% 99.5%, 0% 100%,
+      0.7% 70%, 0% 45%, 0.7% 20%
+    );
+  }
+
+  .cover-clip img{
+    display:block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .crack-line{
+    position: absolute;
+    background: var(--gold);
+    box-shadow: 0 0 12px var(--gold), 0 0 24px var(--ember-bright);
+    z-index: 2;
+    opacity: 0.85;
+  }
+  .crack-line.c1{ top: 18%; left: -2%; width: 35%; height: 2px; transform: rotate(-7deg); }
+  .crack-line.c2{ top: 18%; left: 32%; width: 1.5px; height: 22%; transform: rotate(12deg); }
+  .crack-line.c3{ bottom: 12%; right: -2%; width: 28%; height: 2px; transform: rotate(5deg); }
+
+  .cover-caption{
+    margin-top: 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em;
+    font-size: 13px;
+    color: var(--bone-dim);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* ===== STORY / SECTIONS ===== */
+  .section{
+    padding: 72px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .section-head{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(32px, 5vw, 48px);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 24px;
+    color: var(--star);
+  }
+
+  .section-head .accent{
+    color: var(--ember-bright);
+  }
+
+  .story-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .story-grid p{
+    color: var(--bone-dim);
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .pull-quote{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(24px, 3.2vw, 34px);
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+    border-left: 3px solid var(--ember);
+    padding-left: 24px;
+    text-transform: uppercase;
+  }
+
+  /* ===== GALLERY CAROUSEL ===== */
+  .gallery-intro{
+    color: var(--bone-dim);
+    font-size: 16px;
+    max-width: 620px;
+    margin-bottom: 36px;
+  }
+
+  .carousel-wrap{
+    position: relative;
+  }
+
+  .carousel-track-outer{
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .carousel-track{
+    display: flex;
+    gap: 16px;
+    transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+
+  .carousel-slide{
+    flex: 0 0 calc(25% - 12px);
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--eclipse-edge);
+    box-shadow: 0 16px 40px -16px rgba(0,0,0,0.7);
+    aspect-ratio: 3 / 4;
+    background: #000;
+    cursor: pointer;
+  }
+
+  .carousel-slide img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .carousel-slide:hover img{ transform: scale(1.06); }
+
+  .carousel-slide-label{
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 12px 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--star);
+    background: linear-gradient(to top, rgba(10,10,20,0.92), transparent);
+    pointer-events: none;
+  }
+
+  .carousel-btn{
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--eclipse-edge);
+    background: rgba(10,10,20,0.85);
+    color: var(--bone);
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(4px);
+  }
+  .carousel-btn:hover{ background: rgba(231,76,60,0.3); border-color: var(--ember); }
+  .carousel-btn.prev{ left: -22px; }
+  .carousel-btn.next{ right: -22px; }
+  .carousel-btn:disabled{ opacity: 0.3; cursor: default; }
+
+  .carousel-dots{
+    display: flex; justify-content: center;
+    gap: 8px; margin-top: 20px;
+  }
+  .carousel-dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--eclipse-edge);
+    border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.2s; padding: 0;
+  }
+  .carousel-dot.active{ background: var(--gold); transform: scale(1.3); }
+
+  /* Lightbox */
+  .lightbox{
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92); z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 24px; backdrop-filter: blur(6px);
+  }
+  .lightbox.open{ display: flex; }
+
+  .lightbox-inner{
+    position: relative; max-width: 90vw; max-height: 90vh;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .lightbox-inner img{
+    max-width: 100%; max-height: 80vh;
+    object-fit: contain; border-radius: 4px;
+    box-shadow: 0 0 80px rgba(0,0,0,0.8);
+  }
+  .lightbox-label{
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em; font-size: 14px;
+    text-transform: uppercase; color: var(--bone-dim);
+  }
+  .lightbox-close{
+    position: absolute; top: -44px; right: 0;
+    background: none; border: none; color: var(--bone);
+    font-size: 28px; cursor: pointer; line-height: 1;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .lightbox-close:hover{ opacity: 1; }
+
+  .lightbox-nav{
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(10,10,20,0.7); border: 1px solid var(--eclipse-edge);
+    color: var(--bone); width: 44px; height: 44px; border-radius: 50%;
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .lightbox-nav:hover{ background: rgba(231,76,60,0.3); }
+  .lightbox-nav.lb-prev{ left: -60px; }
+  .lightbox-nav.lb-next{ right: -60px; }
+
+  @media (max-width: 860px){
+    .carousel-slide{ flex: 0 0 calc(50% - 8px); }
+    .carousel-btn.prev{ left: -10px; }
+    .carousel-btn.next{ right: -10px; }
+    .lightbox-nav.lb-prev{ left: -10px; }
+    .lightbox-nav.lb-next{ right: -10px; }
+  }
+  @media (max-width: 520px){
+    .carousel-slide{ flex: 0 0 calc(85% - 8px); }
+  }
+
+  /* ===== BUY PANEL ===== */
+  .buy-section{
+    padding: 80px 0 96px;
+  }
+
+  .buy-card{
+    background: linear-gradient(155deg, rgba(26,21,48,0.9), rgba(10,10,20,0.95));
+    border: 1px solid var(--eclipse-edge);
+    border-radius: 12px;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .buy-card::before{
+    content:'';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(192,57,43,0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  .buy-details h2{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(28px, 4vw, 40px);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .buy-details p{
+    color: var(--bone-dim);
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .price-row{
+    display:flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 24px 0 28px;
+  }
+
+  .price{
+    font-family: 'Anton', sans-serif;
+    font-size: 56px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .price-label{
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.16em;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+  }
+
+  .ship-info{
+    display:flex;
+    gap: 28px;
+    margin: 20px 0 0;
+    flex-wrap: wrap;
+  }
+
+  .ship-info-item{
+    display:flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ship-info-item .label{
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.16em;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .ship-info-item .value{
+    font-size: 14px;
+    color: var(--bone-dim);
+  }
+
+  .buy-action{
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .qty-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .qty-btn{
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--eclipse-edge);
+    background: rgba(255,255,255,0.03);
+    color: var(--bone);
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .qty-btn:hover{ background: rgba(231,76,60,0.15); border-color: var(--ember); }
+
+  .qty-value{
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .checkout-btn{
+    width: 100%;
+    padding: 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--void);
+    background: linear-gradient(135deg, var(--gold), var(--ember-bright));
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 8px 24px -8px rgba(231,76,60,0.6);
+  }
+
+  .checkout-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -8px rgba(231,76,60,0.75);
+  }
+
+  .checkout-btn:active{
+    transform: translateY(0px);
+  }
+
+  .checkout-note{
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--bone-dim);
+    letter-spacing: 0.04em;
+  }
+
+  .checkout-status{
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--gold);
+    min-height: 18px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 0 48px;
+    text-align: center;
+    color: var(--bone-dim);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+
+  footer .foot-title{
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    font-size: 14px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 860px){
+    .hero-grid{ grid-template-columns: 1fr; gap: 40px; }
+    .hero{ padding: 40px 0 56px; text-align: left; }
+    .story-grid{ grid-template-columns: 1fr; gap: 32px; }
+    .buy-card{ grid-template-columns: 1fr; padding: 28px; gap: 32px; }
+    .section{ padding: 56px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+
+  /* Focus visibility */
+  button:focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  /* ===== SOCIAL NAV BAR ===== */
+  .social-bar{
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,20,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--eclipse-edge);
+    padding: 12px 0;
+  }
+  .social-bar-inner{
+    max-width: 1140px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .social-bar-brand{
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.25em;
+    font-size: 16px; color: var(--gold); text-decoration: none; text-transform: uppercase;
+  }
+  .social-links{ display: flex; align-items: center; gap: 12px; }
+  .social-link{
+    display: flex; align-items: center; gap: 7px;
+    padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--eclipse-edge); background: rgba(255,255,255,0.03);
+    color: var(--bone-dim); text-decoration: none;
+    font-size: 13px; font-family: 'Space Grotesk', sans-serif; font-weight: 500;
+    letter-spacing: 0.03em; transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .social-link svg{ flex-shrink: 0; }
+  .social-link.ig:hover{ background: rgba(193,53,132,0.2); border-color: #c13584; color: #e87bb5; }
+  .social-link.tt:hover{ background: rgba(105,201,208,0.15); border-color: #69c9d0; color: #69c9d0; }
+  .social-link.yt:hover{ background: rgba(255,0,0,0.15); border-color: #ff0000; color: #ff4444; }
+  .social-label{ display: inline; }
+  @media (max-width: 600px){
+    .social-label{ display: none; }
+    .social-link{ padding: 8px; }
+  }
+
+  /* ===== SOCIAL FEED SECTION ===== */
+  .social-feed-grid{ display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; align-items: start; }
+  .feed-platform{ display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .feed-platform-name{ font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.2em; font-size: 15px; text-transform: uppercase; }
+  .feed-platform-name.ig{ color: #e87bb5; }
+  .feed-platform-name.tt{ color: #69c9d0; }
+  .feed-platform-name.yt{ color: #ff4444; }
+  .feed-embed-wrap{
+    border-radius: 8px; overflow: hidden; border: 1px solid var(--eclipse-edge);
+    background: rgba(255,255,255,0.02); min-height: 420px;
+    display: flex; align-items: stretch; flex-direction: column;
+  }
+  .feed-embed-wrap iframe{ width: 100% !important; border: none; flex: 1; min-height: 420px; }
+  .feed-follow-btn{
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 16px; padding: 10px 20px; border-radius: 999px;
+    text-decoration: none; font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; transition: opacity 0.2s;
+  }
+  .feed-follow-btn:hover{ opacity: 0.8; }
+  .feed-follow-btn.ig{ background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color:#fff; }
+  .feed-follow-btn.tt{ background: #000; color: #69c9d0; border: 1px solid #69c9d0; }
+  .feed-follow-btn.yt{ background: #ff0000; color: #fff; }
+  @media (max-width: 860px){ .social-feed-grid{ grid-template-columns: 1fr; } }
+
+</style>
+</head>
+<body>
+
+<nav class="social-bar">
+  <div class="social-bar-inner">
+    <a href="#" class="social-bar-brand">Awakened</a>
+    <div class="social-links">
+      <a href="https://www.instagram.com/ezra_eliel/" target="_blank" rel="noopener" class="social-link ig" aria-label="Instagram">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        <span class="social-label">Instagram</span>
+      </a>
+      <a href="https://www.tiktok.com/@ezra.eliel" target="_blank" rel="noopener" class="social-link tt" aria-label="TikTok">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        <span class="social-label">TikTok</span>
+      </a>
+      <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener" class="social-link yt" aria-label="YouTube">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.86 12l-6.11 3.52z"/></svg>
+        <span class="social-label">YouTube</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Issue 01 · Print Edition</span>
+        <h1 class="title">Awakened</h1>
+        <p class="subtitle">Beginnings</p>
+        <p class="hero-copy">
+          The day the Eclipse swept over the world, ordinary people changed.
+          <strong>Awakened</strong> follows a generation suddenly carrying powers
+          they never asked for, in a city run by corruption, underground power
+          brokers, and something far worse waiting in the dark. This is a story
+          about what's left of a person once everything they knew is stripped away —
+          and what they choose to build from the ashes.
+        </p>
+        <div class="tags">
+          <span class="tag">Sci-Fi / Superhero</span>
+          <span class="tag">Grounded Origins</span>
+          <span class="tag">Self-Discovery</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="cover-frame">
+          <div class="cover-clip">
+            <img src="images/cover-full.jpg" alt="Awakened: Beginnings cover art — a young hero confronting a powerful figure whose chest glows with a starfield, set against a deep space background, with the Awakened logo and an eclipse overhead." />
+            
+          </div>
+          <p class="cover-caption">Awakened — Beginnings · Cover Art</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-head">The <span class="accent">Eclipse</span> Changed Everything</h2>
+    <div class="story-grid">
+      <div>
+        <p>
+          Before the Eclipse, the world ran on the same old rules — money, power,
+          and people willing to do anything to keep both. After it, a dormant gene
+          buried in millions woke up all at once. No warnings. No instructions.
+          Just ordinary people — students, workers, the forgotten — suddenly capable
+          of things that shouldn't exist.
+        </p>
+        <p>
+          Some rose to protect what was left. Others saw an opportunity. Beginnings
+          is the first chapter of a larger story: the moment before anyone becomes
+          a hero or a villain, when all they have is fear, a strange new power, and
+          a choice about what kind of person they're going to be.
+        </p>
+      </div>
+      <div>
+        <p class="pull-quote">
+          "Everything you were is gone. What's left is up to you."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-head">Look <span class="accent">Inside</span></h2>
+    <p class="gallery-intro">
+      A first glimpse at the cast and the world of Awakened — the people the
+      Eclipse changed, and the power now running through them.
+    </p>
+    <div class="carousel-wrap">
+      <button class="carousel-btn prev" id="carousel-prev" aria-label="Previous">&#8592;</button>
+      <div class="carousel-track-outer">
+        <div class="carousel-track" id="carousel-track"></div>
+      </div>
+      <button class="carousel-btn next" id="carousel-next" aria-label="Next">&#8594;</button>
+    </div>
+    <div class="carousel-dots" id="carousel-dots"></div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lb-close" aria-label="Close">&#10005;</button>
+    <button class="lightbox-nav lb-prev" id="lb-prev" aria-label="Previous image">&#8592;</button>
+    <img id="lb-img" src="" alt="" />
+    <button class="lightbox-nav lb-next" id="lb-next" aria-label="Next image">&#8594;</button>
+    <span class="lightbox-label" id="lb-label"></span>
+  </div>
+</div>
+
+<section class="section buy-section">
+  <div class="container">
+    <h2 class="section-head">Get The <span class="accent">Print Edition</span></h2>
+    <div class="buy-card">
+      <div class="buy-details">
+        <h2>Awakened: Beginnings</h2>
+        <p>Issue 01 · Full-color print comic · Ships in protective packaging</p>
+        <div class="price-row">
+          <span class="price">$25</span>
+          <span class="price-label">per copy, USD</span>
+        </div>
+        <div class="ship-info">
+          <div class="ship-info-item">
+            <span class="label">Shipping</span>
+            <span class="value">United States only</span>
+          </div>
+          <div class="ship-info-item">
+            <span class="label">Delivery</span>
+            <span class="value">Arrives in 5–7 business days</span>
+          </div>
+          <div class="ship-info-item">
+            <span class="label">Format</span>
+            <span class="value">Physical print copy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="buy-action">
+        <div class="qty-row">
+          <button class="qty-btn" id="qty-minus" aria-label="Decrease quantity">−</button>
+          <span class="qty-value" id="qty-value">1</span>
+          <button class="qty-btn" id="qty-plus" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="checkout-btn" id="checkout-btn">Buy Now — $25.00</button>
+        <p class="checkout-note">Secure checkout powered by Stripe</p>
+        <p class="checkout-status" id="checkout-status"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-head">Follow the <span class="accent">Journey</span></h2>
+    <p class="gallery-intro">Stay connected for behind-the-scenes art, updates, and more from Awakened and Red Blade Studioz.</p>
+    <div class="social-feed-grid">
+
+      <!-- INSTAGRAM -->
+      <div class="feed-col">
+        <div class="feed-platform">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e87bb5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#e87bb5" stroke="none"/></svg>
+          <span class="feed-platform-name ig">Instagram</span>
+        </div>
+        <div class="feed-embed-wrap">
+          <!-- Instagram does not allow live feed embeds via iframe on external sites.
+               The cleanest option is to use a free widget like Behold (behold.so) or
+               Elfsight — paste their embed code here and it will show your latest posts.
+               For now this links directly to your profile. -->
+          <iframe
+            src="https://www.instagram.com/ezra_eliel/embed"
+            scrolling="no"
+            allowtransparency="true"
+            style="background:#fff;"
+          ></iframe>
+        </div>
+        <a href="https://www.instagram.com/ezra_eliel/" target="_blank" rel="noopener" class="feed-follow-btn ig">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/></svg>
+          Follow @ezra_eliel
+        </a>
+      </div>
+
+      <!-- TIKTOK -->
+      <div class="feed-col">
+        <div class="feed-platform">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#69c9d0"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          <span class="feed-platform-name tt">TikTok</span>
+        </div>
+        <div class="feed-embed-wrap">
+          <!-- TikTok blocks external feed embeds. To show your latest videos,
+               use a service like Elfsight TikTok Feed widget (elfsight.com) —
+               paste the embed script here. Alternatively link directly below. -->
+          <iframe
+            src="https://www.tiktok.com/embed/@ezra.eliel"
+            allowfullscreen
+            scrolling="no"
+          ></iframe>
+        </div>
+        <a href="https://www.tiktok.com/@ezra.eliel" target="_blank" rel="noopener" class="feed-follow-btn tt">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          Follow @ezra.eliel
+        </a>
+      </div>
+
+      <!-- YOUTUBE -->
+      <div class="feed-col">
+        <div class="feed-platform">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#ff4444"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.86 12l-6.11 3.52z"/></svg>
+          <span class="feed-platform-name yt">YouTube</span>
+        </div>
+        <div class="feed-embed-wrap">
+          <!-- YouTube channel feed embed — shows latest videos from your channel.
+               Replace UCxxxxxxxxxxxxxxxxxxxxxxxx below with your actual channel ID.
+               Find it: youtube.com > your profile > Your Channel > share > copy channel ID -->
+          <iframe
+            src="https://www.youtube.com/embed?listType=user_uploads&list=RedBladeStudioz&rel=0"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener" class="feed-follow-btn yt">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.52V8.48L15.86 12l-6.11 3.52z"/></svg>
+          Subscribe — RedBladeStudioz
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+  <div class="container">
+    <p class="foot-title">Awakened</p>
+    <p>© 2026 Awakened Comics. All rights reserved. US shipping only.</p>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  // GALLERY IMAGES
+  // To add more images: just drop the file in the images/ folder
+  // and add a new line here: { src: 'images/yourfile.jpg', label: 'Your Caption' }
+  // ============================================================
+  const galleryImages = [
+    { src: 'images/Prolong.jpg', label: 'Mr. Prolong', alt: 'A confident young man in a purple suit standing relaxed outdoors at night.' },
+    { src: 'images/Dad.jpg',        label: 'Awakening',                   alt: 'A man crackling with bright blue electrical energy as his power awakens.' },
+    { src: 'images/Ezekiel-scream.jpg',          label: 'Breaking Point',              alt: 'Close-up of a young man crying out in anguish, tears on his face.' },
+    { src: 'images/Selena.jpg',      label: 'A Warning, Whispered',        alt: 'A woman with long beaded locs and striking red eyes looking on with quiet menace.' },
+    { src: 'images/Social-Media-Art-peice.jpg',      label: 'Two man, all that power',        },
+    { src: 'images/Burnitdown.jpg',      label: 'Burn it Down ',        },
+    // { src: 'images/your-new-image.jpg', label: 'New Scene', alt: 'Describe it here' },
+  ];
+
+  // ============================================================
+  // CAROUSEL
+  // ============================================================
+  const track    = document.getElementById('carousel-track');
+  const dotsWrap = document.getElementById('carousel-dots');
+  const btnPrev  = document.getElementById('carousel-prev');
+  const btnNext  = document.getElementById('carousel-next');
+
+  let visibleCount = window.innerWidth <= 520 ? 1 : window.innerWidth <= 860 ? 2 : 4;
+  let currentIndex = 0;
+
+  function buildCarousel() {
+    track.innerHTML = '';
+    dotsWrap.innerHTML = '';
+
+    galleryImages.forEach((img, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      slide.innerHTML = `
+        <img src="${img.src}" alt="${img.alt}" loading="lazy" />
+        <span class="carousel-slide-label">${img.label}</span>
+      `;
+      slide.addEventListener('click', () => openLightbox(i));
+      track.appendChild(slide);
+    });
+
+    const totalDots = Math.ceil(galleryImages.length / visibleCount);
+    for (let d = 0; d < totalDots; d++) {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (d === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Go to slide group ${d + 1}`);
+      dot.addEventListener('click', () => goTo(d * visibleCount));
+      dotsWrap.appendChild(dot);
+    }
+
+    goTo(0);
+  }
+
+  function getSlideWidth() {
+    const slide = track.querySelector('.carousel-slide');
+    if (!slide) return 0;
+    return slide.offsetWidth + 16; // width + gap
+  }
+
+  function goTo(index) {
+    const maxIndex = Math.max(0, galleryImages.length - visibleCount);
+    currentIndex = Math.max(0, Math.min(index, maxIndex));
+    track.style.transform = `translateX(-${currentIndex * getSlideWidth()}px)`;
+
+    const activeDot = Math.floor(currentIndex / visibleCount);
+    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === activeDot);
+    });
+
+    btnPrev.disabled = currentIndex === 0;
+    btnNext.disabled = currentIndex >= maxIndex;
+  }
+
+  btnPrev.addEventListener('click', () => goTo(currentIndex - visibleCount));
+  btnNext.addEventListener('click', () => goTo(currentIndex + visibleCount));
+
+  // Swipe support
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? goTo(currentIndex + 1) : goTo(currentIndex - 1);
+  });
+
+  // Rebuild on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      visibleCount = window.innerWidth <= 520 ? 1 : window.innerWidth <= 860 ? 2 : 4;
+      buildCarousel();
+    }, 150);
+  });
+
+  buildCarousel();
+
+  // ============================================================
+  // LIGHTBOX
+  // ============================================================
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lb-img');
+  const lbLabel  = document.getElementById('lb-label');
+  let lbIndex    = 0;
+
+  function openLightbox(i) {
+    lbIndex = i;
+    updateLightbox();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function updateLightbox() {
+    const img = galleryImages[lbIndex];
+    lbImg.src   = img.src;
+    lbImg.alt   = img.alt;
+    lbLabel.textContent = img.label;
+  }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev').addEventListener('click', () => {
+    lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+  });
+  document.getElementById('lb-next').addEventListener('click', () => {
+    lbIndex = (lbIndex + 1) % galleryImages.length;
+    updateLightbox();
+  });
+
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  { lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length; updateLightbox(); }
+    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % galleryImages.length; updateLightbox(); }
+  });
+
+  // ============================================================
+  // BUY / STRIPE
+  // ============================================================
+  const PRICE = 25.00;
+  let quantity = 1;
+
+  const qtyValue    = document.getElementById('qty-value');
+  const checkoutBtn = document.getElementById('checkout-btn');
+  const statusEl    = document.getElementById('checkout-status');
+
+  function updateButton(){
+    qtyValue.textContent = quantity;
+    checkoutBtn.textContent = `Buy Now — $${(PRICE * quantity).toFixed(2)}`;
+  }
+
+  document.getElementById('qty-minus').addEventListener('click', () => {
+    if (quantity > 1){ quantity--; updateButton(); }
+  });
+  document.getElementById('qty-plus').addEventListener('click', () => {
+    if (quantity < 10){ quantity++; updateButton(); }
+  });
+
+  checkoutBtn.addEventListener('click', async () => {
+    checkoutBtn.disabled = true;
+    statusEl.textContent = 'Redirecting to secure checkout...';
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity })
+      });
+      if (!res.ok) throw new Error('failed');
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else throw new Error('no url');
+    } catch {
+      statusEl.textContent = 'Checkout is not connected yet — add your Stripe account to enable card payments.';
+      checkoutBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>

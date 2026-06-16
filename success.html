@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Order Confirmed — Awakened</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void: #0a0a14;
+    --indigo: #1a1530;
+    --eclipse-edge: #3a2a5c;
+    --ember-bright: #e74c3c;
+    --gold: #f0a830;
+    --bone: #f4ede0;
+    --bone-dim: #c9c2b8;
+    --star: #e9e6f5;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background: var(--void);
+    color: var(--bone);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .card{
+    max-width: 520px;
+    border: 1px solid var(--eclipse-edge);
+    border-radius: 12px;
+    padding: 48px 32px;
+    background: linear-gradient(155deg, rgba(26,21,48,0.9), rgba(10,10,20,0.95));
+  }
+  .eyebrow{
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.35em;
+    font-size: 13px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  h1{
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(32px, 6vw, 48px);
+    text-transform: uppercase;
+    background: linear-gradient(180deg, var(--star) 0%, var(--bone) 55%, var(--ember-bright) 130%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 16px;
+  }
+  p{
+    color: var(--bone-dim);
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .order-id{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    color: var(--bone-dim);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--eclipse-edge);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 20px;
+    word-break: break-all;
+  }
+  a{
+    display: inline-block;
+    margin-top: 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Order Confirmed</span>
+    <h1>You're Awakened</h1>
+    <p>Thanks for your order! Your copy of <strong>Awakened: Beginnings</strong> will ship within 5–7 business days to the address you provided at checkout.</p>
+    <p>A receipt has been sent to your email.</p>
+    <div class="order-id" id="order-id">Loading order details...</div>
+    <a href="index.html">Back to Awakened</a>
+  </div>
+
+  <script>
+    // Reads the Stripe Checkout session ID from the URL so the
+    // customer has a reference number if they need support.
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const el = document.getElementById('order-id');
+    if (sessionId) {
+      el.textContent = 'Order reference: ' + sessionId;
+    } else {
+      el.textContent = '';
+    }
+  </script>
+</body>
+</html>
