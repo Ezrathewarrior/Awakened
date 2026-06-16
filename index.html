@@ -637,6 +637,66 @@
   .feed-follow-btn.yt{ background: #ff0000; color: #fff; }
   @media (max-width: 860px){ .social-feed-grid{ grid-template-columns: 1fr; } }
 
+
+  /* ===== CART NAV BUTTON ===== */
+  .cart-nav-btn{
+    display:flex; align-items:center; gap:8px; padding:8px 18px;
+    border-radius:999px; border:1px solid var(--gold);
+    background:rgba(240,168,48,0.08); color:var(--gold);
+    font-family:'Bebas Neue',sans-serif; font-size:13px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    cursor:pointer; transition:background 0.2s; white-space:nowrap; flex-shrink:0;
+  }
+  .cart-nav-btn:hover{ background:rgba(240,168,48,0.2); }
+  .cart-count{
+    background:var(--ember-bright); color:#fff;
+    font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700;
+    border-radius:999px; padding:2px 7px; min-width:20px; text-align:center; display:none;
+  }
+  .cart-count.visible{ display:inline-block; }
+  .cart-backdrop{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:300; backdrop-filter:blur(4px); }
+  .cart-backdrop.open{ display:block; }
+  .cart-drawer{
+    position:fixed; top:0; right:0; bottom:0; width:420px; max-width:100vw;
+    background:var(--indigo); border-left:1px solid var(--eclipse-edge);
+    z-index:301; display:flex; flex-direction:column;
+    transform:translateX(100%);
+    transition:transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+    box-shadow:-20px 0 60px rgba(0,0,0,0.5);
+  }
+  .cart-drawer.open{ transform:translateX(0); }
+  .cart-header{ display:flex; align-items:center; justify-content:space-between; padding:22px 24px; border-bottom:1px solid rgba(255,255,255,0.07); flex-shrink:0; }
+  .cart-title{ font-family:'Anton',sans-serif; font-size:24px; text-transform:uppercase; color:var(--star); }
+  .cart-close-btn{ background:none; border:none; color:var(--bone); font-size:24px; cursor:pointer; opacity:0.6; line-height:1; transition:opacity 0.2s; padding:4px; }
+  .cart-close-btn:hover{ opacity:1; }
+  .cart-items{ flex:1; overflow-y:auto; padding:8px 24px; }
+  .cart-empty{ text-align:center; padding:64px 0; color:var(--bone-dim); font-size:15px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .cart-empty svg{ opacity:0.18; }
+  .cart-item{ display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .cart-item:last-child{ border-bottom:none; }
+  .cart-item-img{ width:68px; height:68px; border-radius:7px; flex-shrink:0; background:linear-gradient(135deg,var(--void),#0d0d22); border:1px solid var(--eclipse-edge); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .cart-item-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .cart-item-img svg{ opacity:0.18; }
+  .cart-item-info{ flex:1; min-width:0; }
+  .cart-item-name{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; color:var(--bone); line-height:1.3; }
+  .cart-item-meta{ font-size:12px; color:var(--bone-dim); margin-top:3px; }
+  .cart-item-controls{ display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .cart-qty-btn{ width:28px; height:28px; border-radius:5px; border:1px solid var(--eclipse-edge); background:rgba(255,255,255,0.03); color:var(--bone); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s; }
+  .cart-qty-btn:hover{ background:rgba(231,76,60,0.2); border-color:var(--ember); }
+  .cart-qty-num{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; min-width:22px; text-align:center; color:var(--bone); }
+  .cart-item-remove{ background:none; border:none; color:var(--bone-dim); font-size:11px; cursor:pointer; margin-left:6px; letter-spacing:0.08em; text-transform:uppercase; font-family:'Space Grotesk',sans-serif; font-weight:500; transition:color 0.15s; }
+  .cart-item-remove:hover{ color:var(--ember-bright); }
+  .cart-item-price{ font-family:'Anton',sans-serif; font-size:17px; color:var(--gold); flex-shrink:0; padding-top:3px; }
+  .cart-footer{ padding:20px 24px 28px; border-top:1px solid rgba(255,255,255,0.07); flex-shrink:0; background:rgba(10,10,20,0.4); }
+  .cart-subtotal-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px; }
+  .cart-subtotal-label{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.22em; font-size:13px; text-transform:uppercase; color:var(--bone-dim); }
+  .cart-subtotal-amt{ font-family:'Anton',sans-serif; font-size:28px; color:var(--gold); }
+  .cart-checkout-btn{ width:100%; padding:17px; font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:0.18em; text-transform:uppercase; color:var(--void); background:linear-gradient(135deg,var(--gold),var(--ember-bright)); border:none; border-radius:8px; cursor:pointer; transition:transform 0.15s,box-shadow 0.15s,opacity 0.2s; box-shadow:0 8px 28px -8px rgba(231,76,60,0.55); }
+  .cart-checkout-btn:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 14px 36px -8px rgba(231,76,60,0.7); }
+  .cart-checkout-btn:disabled{ opacity:0.45; cursor:default; }
+  .cart-checkout-note{ margin-top:10px; font-size:12px; color:var(--bone-dim); text-align:center; }
+  .cart-checkout-status{ margin-top:7px; font-size:13px; color:var(--gold); text-align:center; min-height:18px; }
+
 </style>
 </head>
 <body>
@@ -664,6 +724,10 @@
         <span class="social-label">YouTube</span>
       </a>
     </div>
+    <button class="cart-nav-btn" id="cart-nav-btn" aria-label="Open cart">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Cart <span class="cart-count" id="cart-count">0</span>
+    </button>
   </div>
 </nav>
 
@@ -792,7 +856,7 @@
           <span class="qty-value" id="qty-value">1</span>
           <button class="qty-btn" id="qty-plus" aria-label="Increase quantity">+</button>
         </div>
-        <button class="checkout-btn" id="checkout-btn">Buy Now — $25.00</button>
+        <button class="checkout-btn" id="checkout-btn">Add to Cart — $25.00</button>
         <p class="checkout-note">Secure checkout powered by Stripe</p>
         <p class="checkout-status" id="checkout-status"></p>
       </div>
@@ -884,189 +948,154 @@
   </div>
 </footer>
 
+<!-- CART BACKDROP -->
+<div class="cart-backdrop" id="cart-backdrop"></div>
+<!-- CART DRAWER -->
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <span class="cart-title">Your Cart</span>
+    <button class="cart-close-btn" id="cart-close-btn" aria-label="Close">&#10005;</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty" id="cart-empty">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <p>Your cart is empty</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-subtotal-row">
+      <span class="cart-subtotal-label">Subtotal</span>
+      <span class="cart-subtotal-amt" id="cart-subtotal">$0.00</span>
+    </div>
+    <button class="cart-checkout-btn" id="cart-checkout-btn" disabled>Checkout</button>
+    <p class="cart-checkout-note">Secure checkout · Shipping collected at checkout</p>
+    <p class="cart-checkout-status" id="cart-checkout-status"></p>
+  </div>
+</div>
+
 <script>
-  // ============================================================
-  // GALLERY IMAGES
-  // To add more images: just drop the file in the images/ folder
-  // and add a new line here: { src: 'images/yourfile.jpg', label: 'Your Caption' }
-  // ============================================================
-  const galleryImages = [
-    { src: 'images/Prolong.jpg', label: 'Mr. Prolong', alt: 'A confident young man in a purple suit standing relaxed outdoors at night.' },
-    { src: 'images/Dad.jpg',        label: 'Awakening',                   alt: 'A man crackling with bright blue electrical energy as his power awakens.' },
-    { src: 'images/Ezekiel-scream.jpg',          label: 'Breaking Point',              alt: 'Close-up of a young man crying out in anguish, tears on his face.' },
-    { src: 'images/Selena.jpg',      label: 'A Warning, Whispered',        alt: 'A woman with long beaded locs and striking red eyes looking on with quiet menace.' },
-    { src: 'images/Social-Media-Art-peice.jpg',      label: 'Two man, all that power',        },
-    { src: 'images/Burnitdown.jpg',      label: 'Burn it Down ',        },
-    // { src: 'images/your-new-image.jpg', label: 'New Scene', alt: 'Describe it here' },
-  ];
+// ── CART ─────────────────────────────────────────────────────────
+let cart = [];
+function loadCart(){ try{ cart=JSON.parse(localStorage.getItem('awakened-cart'))||[]; }catch{ cart=[]; } }
+function saveCart(){ localStorage.setItem('awakened-cart', JSON.stringify(cart)); }
 
-  // ============================================================
-  // CAROUSEL
-  // ============================================================
-  const track    = document.getElementById('carousel-track');
-  const dotsWrap = document.getElementById('carousel-dots');
-  const btnPrev  = document.getElementById('carousel-prev');
-  const btnNext  = document.getElementById('carousel-next');
-
-  let visibleCount = window.innerWidth <= 520 ? 1 : window.innerWidth <= 860 ? 2 : 4;
-  let currentIndex = 0;
-
-  function buildCarousel() {
-    track.innerHTML = '';
-    dotsWrap.innerHTML = '';
-
-    galleryImages.forEach((img, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'carousel-slide';
-      slide.innerHTML = `
-        <img src="${img.src}" alt="${img.alt}" loading="lazy" />
-        <span class="carousel-slide-label">${img.label}</span>
-      `;
-      slide.addEventListener('click', () => openLightbox(i));
-      track.appendChild(slide);
+function renderCart(){
+  const itemsEl    = document.getElementById('cart-items');
+  const countEl    = document.getElementById('cart-count');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const checkBtn   = document.getElementById('cart-checkout-btn');
+  const emptyEl    = document.getElementById('cart-empty');
+  const totalItems = cart.reduce((s,i)=>s+i.qty,0);
+  const totalCents = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  countEl.textContent = totalItems;
+  countEl.classList.toggle('visible', totalItems>0);
+  subtotalEl.textContent = '$'+(totalCents/100).toFixed(2);
+  checkBtn.disabled = cart.length===0;
+  if(cart.length===0){
+    itemsEl.innerHTML='';
+    if(emptyEl){ emptyEl.style.display='flex'; itemsEl.appendChild(emptyEl); }
+    return;
+  }
+  emptyEl && (emptyEl.style.display='none');
+  itemsEl.innerHTML='';
+  cart.forEach((item,idx)=>{
+    const div=document.createElement('div');
+    div.className='cart-item';
+    div.innerHTML=`
+      <div class="cart-item-img">${item.imgSrc?`<img src="${item.imgSrc}" alt="${item.name}" />`:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${item.size&&item.size!=='N/A'?'Size: '+item.size:''}</div>
+        <div class="cart-item-controls">
+          <button class="cart-qty-btn" data-action="dec" data-idx="${idx}">−</button>
+          <span class="cart-qty-num">${item.qty}</span>
+          <button class="cart-qty-btn" data-action="inc" data-idx="${idx}">+</button>
+          <button class="cart-item-remove" data-idx="${idx}">Remove</button>
+        </div>
+      </div>
+      <div class="cart-item-price">$${(item.price*item.qty/100).toFixed(2)}</div>
+    `;
+    itemsEl.appendChild(div);
+  });
+  itemsEl.querySelectorAll('.cart-qty-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const i=parseInt(btn.dataset.idx);
+      if(btn.dataset.action==='inc') cart[i].qty=Math.min(10,cart[i].qty+1);
+      else{ cart[i].qty--; if(cart[i].qty<=0) cart.splice(i,1); }
+      saveCart(); renderCart();
     });
+  });
+  itemsEl.querySelectorAll('.cart-item-remove').forEach(btn=>{
+    btn.addEventListener('click',()=>{ cart.splice(parseInt(btn.dataset.idx),1); saveCart(); renderCart(); });
+  });
+}
 
-    const totalDots = Math.ceil(galleryImages.length / visibleCount);
-    for (let d = 0; d < totalDots; d++) {
-      const dot = document.createElement('button');
-      dot.className = 'carousel-dot' + (d === 0 ? ' active' : '');
-      dot.setAttribute('aria-label', `Go to slide group ${d + 1}`);
-      dot.addEventListener('click', () => goTo(d * visibleCount));
-      dotsWrap.appendChild(dot);
-    }
+function openCart(){ document.getElementById('cart-drawer').classList.add('open'); document.getElementById('cart-backdrop').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeCart(){ document.getElementById('cart-drawer').classList.remove('open'); document.getElementById('cart-backdrop').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('cart-nav-btn').addEventListener('click', openCart);
+document.getElementById('cart-close-btn').addEventListener('click', closeCart);
+document.getElementById('cart-backdrop').addEventListener('click', closeCart);
 
-    goTo(0);
-  }
+// ── COMIC BUY BUTTON → ADD TO CART ───────────────────────────────
+const PRICE = 25.00;
+let quantity = 1;
+const qtyValue    = document.getElementById('qty-value');
+const checkoutBtn = document.getElementById('checkout-btn');
+const statusEl    = document.getElementById('checkout-status');
 
-  function getSlideWidth() {
-    const slide = track.querySelector('.carousel-slide');
-    if (!slide) return 0;
-    return slide.offsetWidth + 16; // width + gap
-  }
+function updateComicBtn(){
+  qtyValue.textContent = quantity;
+  checkoutBtn.textContent = 'Add to Cart — $'+(PRICE*quantity).toFixed(2);
+}
 
-  function goTo(index) {
-    const maxIndex = Math.max(0, galleryImages.length - visibleCount);
-    currentIndex = Math.max(0, Math.min(index, maxIndex));
-    track.style.transform = `translateX(-${currentIndex * getSlideWidth()}px)`;
+document.getElementById('qty-minus').addEventListener('click',()=>{ if(quantity>1){ quantity--; updateComicBtn(); } });
+document.getElementById('qty-plus').addEventListener('click',()=>{ if(quantity<10){ quantity++; updateComicBtn(); } });
 
-    const activeDot = Math.floor(currentIndex / visibleCount);
-    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === activeDot);
+checkoutBtn.addEventListener('click',()=>{
+  const key = 'comic-awakened-beginnings|N/A';
+  const existing = cart.find(i=>i.id===key);
+  if(existing){ existing.qty=Math.min(10,existing.qty+quantity); }
+  else{
+    cart.push({
+      id:          key,
+      name:        'Awakened: Beginnings (Print Edition)',
+      price:       2500,
+      stripePrice: 'price_REPLACE_WITH_COMIC_PRICE_ID',
+      size:        'N/A',
+      qty:         quantity,
+      imgSrc:      document.querySelector('.cover-clip img') ? document.querySelector('.cover-clip img').src : null,
     });
-
-    btnPrev.disabled = currentIndex === 0;
-    btnNext.disabled = currentIndex >= maxIndex;
   }
+  saveCart(); renderCart();
+  checkoutBtn.textContent='✓ Added to Cart!';
+  setTimeout(()=>{ updateComicBtn(); openCart(); }, 700);
+});
 
-  btnPrev.addEventListener('click', () => goTo(currentIndex - visibleCount));
-  btnNext.addEventListener('click', () => goTo(currentIndex + visibleCount));
-
-  // Swipe support
-  let touchStartX = 0;
-  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) diff > 0 ? goTo(currentIndex + 1) : goTo(currentIndex - 1);
-  });
-
-  // Rebuild on resize
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      visibleCount = window.innerWidth <= 520 ? 1 : window.innerWidth <= 860 ? 2 : 4;
-      buildCarousel();
-    }, 150);
-  });
-
-  buildCarousel();
-
-  // ============================================================
-  // LIGHTBOX
-  // ============================================================
-  const lightbox = document.getElementById('lightbox');
-  const lbImg    = document.getElementById('lb-img');
-  const lbLabel  = document.getElementById('lb-label');
-  let lbIndex    = 0;
-
-  function openLightbox(i) {
-    lbIndex = i;
-    updateLightbox();
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
+// ── CART CHECKOUT → STRIPE ────────────────────────────────────────
+document.getElementById('cart-checkout-btn').addEventListener('click', async ()=>{
+  const btn=document.getElementById('cart-checkout-btn');
+  const status=document.getElementById('cart-checkout-status');
+  btn.disabled=true; status.textContent='Redirecting to checkout...';
+  const lineItems=cart.map(item=>({
+    stripePrice: item.stripePrice,
+    productName: item.name+(item.size&&item.size!=='N/A'?' ('+item.size+')':''),
+    unitAmount:  item.price,
+    quantity:    item.qty,
+  }));
+  try{
+    const res=await fetch('/api/create-checkout-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lineItems})});
+    const data=await res.json();
+    if(data.url){ window.location.href=data.url; } else throw new Error();
+  } catch{
+    status.textContent='Checkout not connected — make sure Stripe is set up.';
+    btn.disabled=false;
   }
+});
 
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeCart(); });
 
-  function updateLightbox() {
-    const img = galleryImages[lbIndex];
-    lbImg.src   = img.src;
-    lbImg.alt   = img.alt;
-    lbLabel.textContent = img.label;
-  }
-
-  document.getElementById('lb-close').addEventListener('click', closeLightbox);
-  document.getElementById('lb-prev').addEventListener('click', () => {
-    lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length;
-    updateLightbox();
-  });
-  document.getElementById('lb-next').addEventListener('click', () => {
-    lbIndex = (lbIndex + 1) % galleryImages.length;
-    updateLightbox();
-  });
-
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-
-  document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft')  { lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length; updateLightbox(); }
-    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % galleryImages.length; updateLightbox(); }
-  });
-
-  // ============================================================
-  // BUY / STRIPE
-  // ============================================================
-  const PRICE = 25.00;
-  let quantity = 1;
-
-  const qtyValue    = document.getElementById('qty-value');
-  const checkoutBtn = document.getElementById('checkout-btn');
-  const statusEl    = document.getElementById('checkout-status');
-
-  function updateButton(){
-    qtyValue.textContent = quantity;
-    checkoutBtn.textContent = `Buy Now — $${(PRICE * quantity).toFixed(2)}`;
-  }
-
-  document.getElementById('qty-minus').addEventListener('click', () => {
-    if (quantity > 1){ quantity--; updateButton(); }
-  });
-  document.getElementById('qty-plus').addEventListener('click', () => {
-    if (quantity < 10){ quantity++; updateButton(); }
-  });
-
-  checkoutBtn.addEventListener('click', async () => {
-    checkoutBtn.disabled = true;
-    statusEl.textContent = 'Redirecting to secure checkout...';
-    try {
-      const res = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity })
-      });
-      if (!res.ok) throw new Error('failed');
-      const data = await res.json();
-      if (data.url) { window.location.href = data.url; }
-      else throw new Error('no url');
-    } catch {
-      statusEl.textContent = 'Checkout is not connected yet — add your Stripe account to enable card payments.';
-      checkoutBtn.disabled = false;
-    }
-  });
+// ── INIT ──────────────────────────────────────────────────────────
+loadCart(); renderCart();
 </script>
 
 </body>

@@ -723,363 +723,6 @@
   </div>
 </div>
 
-<footer>
-  <div class="container">
-    <p class="foot-title">Awakened · Red Blade Studioz</p>
-    <div class="foot-links">
-      <a href="index.html">Comic</a>
-      <a href="merch.html">Merch</a>
-      <a href="https://www.instagram.com/ezra_eliel/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.tiktok.com/@ezra.eliel" target="_blank" rel="noopener">TikTok</a>
-      <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener">YouTube</a>
-    </div>
-    <p>© 2026 Awakened Comics · Red Blade Studioz. All rights reserved. US shipping only.</p>
-  </div>
-</footer>
-
-<script>
-  // ============================================================
-  // CART — stored in localStorage so it persists between pages
-  // ============================================================
-  let cart = [];
-
-  function loadCart(){
-    try { cart = JSON.parse(localStorage.getItem('awakened-cart')) || []; } catch{ cart = []; }
-  }
-  function saveCart(){
-    localStorage.setItem('awakened-cart', JSON.stringify(cart));
-  }
-
-  function renderCart(){
-    const itemsEl   = document.getElementById('cart-items');
-    const countEl   = document.getElementById('cart-count');
-    const subtotalEl= document.getElementById('cart-subtotal');
-    const checkoutBtn= document.getElementById('cart-checkout-btn');
-    const emptyEl   = document.getElementById('cart-empty');
-
-    const totalItems = cart.reduce((s, i) => s + i.qty, 0);
-    const totalCents = cart.reduce((s, i) => s + i.price * i.qty, 0);
-
-    // Update nav badge
-    countEl.textContent = totalItems;
-    countEl.classList.toggle('visible', totalItems > 0);
-
-    // Update subtotal
-    subtotalEl.textContent = '$' + (totalCents / 100).toFixed(2);
-    checkoutBtn.disabled = cart.length === 0;
-
-    // Build item list
-    if (cart.length === 0) {
-      itemsEl.innerHTML = '';
-      itemsEl.appendChild(document.getElementById('cart-empty') || createEmpty());
-      emptyEl && (emptyEl.style.display = 'flex');
-      return;
-    }
-
-    emptyEl && (emptyEl.style.display = 'none');
-
-    // Remove old items (keep empty div)
-    Array.from(itemsEl.children).forEach(c => { if(!c.id) c.remove(); });
-
-    // Re-render all items
-    const frag = document.createDocumentFragment();
-    cart.forEach((item, idx) => {
-      const div = document.createElement('div');
-      div.className = 'cart-item';
-      div.innerHTML = `
-        <div class="cart-item-img">
-          ${item.imgSrc
-            ? `<img src="${item.imgSrc}" alt="${item.name}" />`
-            : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`
-          }
-        </div>
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-meta">${item.size && item.size !== 'N/A' ? 'Size: ' + item.size : ''}</div>
-          <div class="cart-item-controls">
-            <button class="cart-qty-btn" data-action="dec" data-idx="${idx}">−</button>
-            <span class="cart-qty-num">${item.qty}</span>
-            <button class="cart-qty-btn" data-action="inc" data-idx="${idx}">+</button>
-            <button class="cart-item-remove" data-idx="${idx}">Remove</button>
-          </div>
-        </div>
-        <div class="cart-item-price">$${(item.price * item.qty / 100).toFixed(2)}</div>
-      `;
-      frag.appendChild(div);
-    });
-
-    // Clear and re-insert
-    itemsEl.innerHTML = '';
-    itemsEl.appendChild(frag);
-
-    // Qty / remove listeners
-    itemsEl.querySelectorAll('.cart-qty-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.idx);
-        if (btn.dataset.action === 'inc') cart[i].qty = Math.min(10, cart[i].qty + 1);
-        else {
-          cart[i].qty--;
-          if (cart[i].qty <= 0) cart.splice(i, 1);
-        }
-        saveCart(); renderCart();
-      });
-    });
-    itemsEl.querySelectorAll('.cart-item-remove').forEach(btn => {
-      btn.addEventListener('click', () => {
-        cart.splice(parseInt(btn.dataset.idx), 1);
-        saveCart(); renderCart();
-      });
-    });
-  }
-
-  // ============================================================
-  // OPEN / CLOSE CART
-  // ============================================================
-  function openCart(){
-    document.getElementById('cart-drawer').classList.add('open');
-    document.getElementById('cart-backdrop').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeCart(){
-    document.getElementById('cart-drawer').classList.remove('open');
-    document.getElementById('cart-backdrop').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  document.getElementById('cart-nav-btn').addEventListener('click', openCart);
-  document.getElementById('cart-close-btn').addEventListener('click', closeCart);
-  document.getElementById('cart-backdrop').addEventListener('click', closeCart);
-
-  // ============================================================
-  // FILTER TABS
-  // ============================================================
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.product-card');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      cards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-    });
-  });
-
-  // ============================================================
-  // MODAL
-  // ============================================================
-  const overlay     = document.getElementById('modal-overlay');
-  const modalName   = document.getElementById('modal-name');
-  const modalCat    = document.getElementById('modal-category');
-  const modalPrice  = document.getElementById('modal-price');
-  const modalSizes  = document.getElementById('modal-sizes');
-  const modalSizeSec= document.getElementById('modal-size-section');
-  const modalQtyVal = document.getElementById('modal-qty-value');
-  const modalBtn    = document.getElementById('modal-checkout-btn');
-  const modalStatus = document.getElementById('modal-status');
-
-  let currentProduct = null;
-  let selectedSize   = null;
-  let modalQty       = 1;
-
-  function openModal(card) {
-    currentProduct = {
-      name:        card.dataset.name,
-      price:       parseInt(card.dataset.price, 10),
-      stripePrice: card.dataset.stripePrice,
-      sizes:       card.dataset.sizes,
-      category:    card.querySelector('.product-category').textContent,
-      imgSrc:      card.querySelector('.product-img img') ? card.querySelector('.product-img img').src : null,
-    };
-    selectedSize = null;
-    modalQty = 1;
-
-    modalName.textContent  = currentProduct.name;
-    modalCat.textContent   = currentProduct.category;
-    modalPrice.textContent = '$' + (currentProduct.price / 100).toFixed(0);
-    modalQtyVal.textContent = '1';
-    modalStatus.textContent = '';
-    updateModalBtn();
-
-    // Show product image in modal
-    const modalImgEl = document.getElementById('modal-img');
-    const cardImg = card.querySelector('.product-img img');
-    const cardSvg = card.querySelector('.product-img svg');
-    modalImgEl.innerHTML = '';
-    if (cardImg) {
-      const img = document.createElement('img');
-      img.src = cardImg.src;
-      img.alt = currentProduct.name;
-      modalImgEl.appendChild(img);
-    } else if (cardSvg) {
-      const placeholder = document.createElement('div');
-      placeholder.className = 'modal-img-placeholder';
-      placeholder.innerHTML = cardSvg.outerHTML;
-      modalImgEl.appendChild(placeholder);
-    }
-
-    // Build size buttons
-    modalSizes.innerHTML = '';
-    if (currentProduct.sizes === 'none') {
-      modalSizeSec.style.display = 'none';
-      selectedSize = 'N/A';
-    } else {
-      modalSizeSec.style.display = 'block';
-      currentProduct.sizes.split(',').forEach(size => {
-        const btn = document.createElement('button');
-        btn.className = 'size-btn';
-        btn.textContent = size.trim();
-        btn.addEventListener('click', () => {
-          modalSizes.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          selectedSize = size.trim();
-          updateModalBtn();
-        });
-        modalSizes.appendChild(btn);
-      });
-    }
-
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function updateModalBtn() {
-    if (!currentProduct) return;
-    const total = ((currentProduct.price * modalQty) / 100).toFixed(2);
-    modalBtn.textContent = `Checkout — $${total}`;
-  }
-
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
-  document.getElementById('modal-qty-minus').addEventListener('click', () => {
-    if (modalQty > 1) { modalQty--; modalQtyVal.textContent = modalQty; updateModalBtn(); }
-  });
-  document.getElementById('modal-qty-plus').addEventListener('click', () => {
-    if (modalQty < 10) { modalQty++; modalQtyVal.textContent = modalQty; updateModalBtn(); }
-  });
-
-  // Wire up all product buttons
-  cards.forEach(card => {
-    card.querySelector('.product-btn').addEventListener('click', e => {
-      e.stopPropagation();
-      openModal(card);
-    });
-    card.addEventListener('click', () => openModal(card));
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
-  });
-
-  // ============================================================
-  // CHECKOUT
-  // To wire up: create a Stripe Price ID for each product in the
-  // Stripe Dashboard (Products → Add Product), then replace each
-  // data-stripe-price="price_REPLACE_ME" on the product cards
-  // with the real ID e.g. data-stripe-price="price_1AbcDef..."
-  // The /api/create-checkout-session endpoint handles the rest.
-  // ============================================================
-  // ============================================================
-  // ADD TO CART (modal button)
-  // ============================================================
-  let currentCard = null;
-
-  // Patch openModal to track current card
-  const _origOpen = openModal;
-  // Re-wire card clicks to store currentCard
-  cards.forEach(card => {
-    card.querySelector('.product-btn').addEventListener('click', e => { currentCard = card; });
-    card.addEventListener('click', () => { currentCard = card; });
-  });
-
-  modalBtn.addEventListener('click', () => {
-    if (currentProduct.sizes !== 'none' && !selectedSize) {
-      modalStatus.textContent = 'Please select a size first.';
-      return;
-    }
-
-    // Unique key = stripePrice + size so same product different size stacks separately
-    const key = (currentProduct.stripePrice || currentProduct.name) + '|' + (selectedSize || 'N/A');
-    const existing = cart.find(i => i.id === key);
-    if (existing) {
-      existing.qty = Math.min(10, existing.qty + modalQty);
-    } else {
-      cart.push({
-        id:          key,
-        name:        currentProduct.name,
-        price:       currentProduct.price,
-        stripePrice: currentProduct.stripePrice,
-        size:        selectedSize || 'N/A',
-        qty:         modalQty,
-        imgSrc:      currentProduct.imgSrc || null,
-      });
-    }
-
-    saveCart();
-    renderCart();
-
-    // Flash product card border gold
-    if (currentCard){
-      currentCard.classList.add('added-flash');
-      setTimeout(() => currentCard.classList.remove('added-flash'), 900);
-    }
-
-    // Show confirmation then open cart
-    modalBtn.textContent = '✓ Added to Cart!';
-    setTimeout(() => { closeModal(); openCart(); }, 650);
-  });
-
-  // ============================================================
-  // CART CHECKOUT → STRIPE (all items at once)
-  // ============================================================
-  document.getElementById('cart-checkout-btn').addEventListener('click', async () => {
-    const btn    = document.getElementById('cart-checkout-btn');
-    const status = document.getElementById('cart-checkout-status');
-    btn.disabled = true;
-    status.textContent = 'Redirecting to checkout...';
-
-    const lineItems = cart.map(item => ({
-      stripePrice:  item.stripePrice,
-      productName:  item.name + (item.size && item.size !== 'N/A' ? ' (' + item.size + ')' : ''),
-      unitAmount:   item.price,
-      quantity:     item.qty,
-    }));
-
-    try {
-      const res = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lineItems }),
-      });
-      const data = await res.json();
-      if (data.url) { window.location.href = data.url; }
-      else throw new Error('no url');
-    } catch {
-      status.textContent = 'Checkout not connected — make sure Stripe is set up.';
-      btn.disabled = false;
-    }
-  });
-
-  // ============================================================
-  // INIT
-  // ============================================================
-  loadCart();
-  renderCart();
-</script>
-
-
 <!-- CART BACKDROP -->
 <div class="cart-backdrop" id="cart-backdrop"></div>
 
@@ -1087,7 +730,7 @@
 <div class="cart-drawer" id="cart-drawer">
   <div class="cart-header">
     <span class="cart-title">Your Cart</span>
-    <button class="cart-close-btn" id="cart-close-btn" aria-label="Close cart">&#10005;</button>
+    <button class="cart-close-btn" id="cart-close-btn" aria-label="Close">&#10005;</button>
   </div>
   <div class="cart-items" id="cart-items">
     <div class="cart-empty" id="cart-empty">
@@ -1105,6 +748,283 @@
     <p class="cart-checkout-status" id="cart-checkout-status"></p>
   </div>
 </div>
+
+<footer>
+  <div class="container">
+    <p class="foot-title">Awakened · Red Blade Studioz</p>
+    <div class="foot-links">
+      <a href="index.html">Comic</a>
+      <a href="merch.html">Merch</a>
+      <a href="https://www.instagram.com/ezra_eliel/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.tiktok.com/@ezra.eliel" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener">YouTube</a>
+    </div>
+    <p>© 2026 Awakened Comics · Red Blade Studioz. All rights reserved. US shipping only.</p>
+  </div>
+</footer>
+
+<script>
+// ── CART (localStorage so it persists across pages) ──────────────
+let cart = [];
+function loadCart(){ try{ cart=JSON.parse(localStorage.getItem('awakened-cart'))||[]; }catch{ cart=[]; } }
+function saveCart(){ localStorage.setItem('awakened-cart', JSON.stringify(cart)); }
+
+function renderCart(){
+  const itemsEl    = document.getElementById('cart-items');
+  const countEl    = document.getElementById('cart-count');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const checkBtn   = document.getElementById('cart-checkout-btn');
+  const emptyEl    = document.getElementById('cart-empty');
+
+  const totalItems = cart.reduce((s,i)=>s+i.qty,0);
+  const totalCents = cart.reduce((s,i)=>s+i.price*i.qty,0);
+
+  countEl.textContent = totalItems;
+  countEl.classList.toggle('visible', totalItems > 0);
+  subtotalEl.textContent = '$'+(totalCents/100).toFixed(2);
+  checkBtn.disabled = cart.length === 0;
+
+  if(cart.length === 0){
+    itemsEl.innerHTML = '';
+    const e = document.getElementById('cart-empty') || emptyEl;
+    if(e){ e.style.display='flex'; itemsEl.appendChild(e); }
+    return;
+  }
+
+  emptyEl && (emptyEl.style.display='none');
+  itemsEl.innerHTML = '';
+
+  cart.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <div class="cart-item-img">
+        ${item.imgSrc ? `<img src="${item.imgSrc}" alt="${item.name}" />` : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`}
+      </div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${item.size && item.size!=='N/A' ? 'Size: '+item.size : ''}</div>
+        <div class="cart-item-controls">
+          <button class="cart-qty-btn" data-action="dec" data-idx="${idx}">−</button>
+          <span class="cart-qty-num">${item.qty}</span>
+          <button class="cart-qty-btn" data-action="inc" data-idx="${idx}">+</button>
+          <button class="cart-item-remove" data-idx="${idx}">Remove</button>
+        </div>
+      </div>
+      <div class="cart-item-price">$${(item.price*item.qty/100).toFixed(2)}</div>
+    `;
+    itemsEl.appendChild(div);
+  });
+
+  itemsEl.querySelectorAll('.cart-qty-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const i=parseInt(btn.dataset.idx);
+      if(btn.dataset.action==='inc') cart[i].qty=Math.min(10,cart[i].qty+1);
+      else{ cart[i].qty--; if(cart[i].qty<=0) cart.splice(i,1); }
+      saveCart(); renderCart();
+    });
+  });
+  itemsEl.querySelectorAll('.cart-item-remove').forEach(btn=>{
+    btn.addEventListener('click',()=>{ cart.splice(parseInt(btn.dataset.idx),1); saveCart(); renderCart(); });
+  });
+}
+
+// ── OPEN / CLOSE CART ─────────────────────────────────────────────
+function openCart(){
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('cart-backdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeCart(){
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('cart-backdrop').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('cart-nav-btn').addEventListener('click', openCart);
+document.getElementById('cart-close-btn').addEventListener('click', closeCart);
+document.getElementById('cart-backdrop').addEventListener('click', closeCart);
+
+// ── FILTER TABS ───────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.product-card').forEach(c=>{
+      c.classList.toggle('hidden', f!=='all' && c.dataset.category!==f);
+    });
+  });
+});
+
+// ── PRODUCT MODAL ─────────────────────────────────────────────────
+const overlay     = document.getElementById('modal-overlay');
+const modalName   = document.getElementById('modal-name');
+const modalCat    = document.getElementById('modal-category');
+const modalPriceEl= document.getElementById('modal-price');
+const modalSizes  = document.getElementById('modal-sizes');
+const modalSizeSec= document.getElementById('modal-size-section');
+const modalQtyVal = document.getElementById('modal-qty-value');
+const modalBtn    = document.getElementById('modal-checkout-btn');
+const modalStatus = document.getElementById('modal-status');
+
+let currentProduct = null;
+let currentCard    = null;
+let selectedSize   = null;
+let modalQty       = 1;
+
+function updateModalBtn(){
+  if(!currentProduct) return;
+  const total = ((currentProduct.price * modalQty)/100).toFixed(2);
+  modalBtn.textContent = 'Add to Cart — $'+total;
+}
+
+function openModal(card){
+  currentCard = card;
+  currentProduct = {
+    name:        card.dataset.name,
+    price:       parseInt(card.dataset.price,10),
+    stripePrice: card.dataset.stripePrice,
+    sizes:       card.dataset.sizes,
+    category:    card.querySelector('.product-category').textContent,
+    imgSrc:      card.querySelector('.product-img img') ? card.querySelector('.product-img img').src : null,
+  };
+  selectedSize = null;
+  modalQty = 1;
+
+  modalName.textContent   = currentProduct.name;
+  modalCat.textContent    = currentProduct.category;
+  modalPriceEl.textContent= '$'+(currentProduct.price/100).toFixed(0);
+  modalQtyVal.textContent = '1';
+  modalStatus.textContent = '';
+  updateModalBtn();
+
+  // Image
+  const modalImgEl = document.getElementById('modal-img');
+  modalImgEl.innerHTML = '';
+  const cardImg = card.querySelector('.product-img img');
+  const cardSvg = card.querySelector('.product-img svg:not([style*="display:none"])');
+  if(cardImg){
+    const img = document.createElement('img');
+    img.src = cardImg.src; img.alt = currentProduct.name;
+    modalImgEl.appendChild(img);
+  } else if(cardSvg){
+    const ph = document.createElement('div');
+    ph.className='modal-img-placeholder';
+    ph.innerHTML = cardSvg.outerHTML;
+    modalImgEl.appendChild(ph);
+  }
+
+  // Sizes
+  modalSizes.innerHTML = '';
+  if(currentProduct.sizes==='none'){
+    modalSizeSec.style.display='none';
+    selectedSize='N/A';
+  } else {
+    modalSizeSec.style.display='block';
+    currentProduct.sizes.split(',').forEach(sz=>{
+      const b = document.createElement('button');
+      b.className='size-btn';
+      b.textContent=sz.trim();
+      b.addEventListener('click', e=>{
+        e.stopPropagation();
+        modalSizes.querySelectorAll('.size-btn').forEach(x=>x.classList.remove('selected'));
+        b.classList.add('selected');
+        selectedSize=sz.trim();
+        updateModalBtn();
+      });
+      modalSizes.appendChild(b);
+    });
+  }
+
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  overlay.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+overlay.addEventListener('click', e=>{ if(e.target===overlay) closeModal(); });
+document.getElementById('modal-qty-minus').addEventListener('click',()=>{
+  if(modalQty>1){ modalQty--; modalQtyVal.textContent=modalQty; updateModalBtn(); }
+});
+document.getElementById('modal-qty-plus').addEventListener('click',()=>{
+  if(modalQty<10){ modalQty++; modalQtyVal.textContent=modalQty; updateModalBtn(); }
+});
+
+// Wire product cards — single listener per card
+document.querySelectorAll('.product-card').forEach(card=>{
+  const btn = card.querySelector('.product-btn');
+  btn.addEventListener('click', e=>{ e.stopPropagation(); openModal(card); });
+  card.addEventListener('click', ()=>openModal(card));
+});
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    if(overlay.classList.contains('open')) closeModal();
+    else closeCart();
+  }
+});
+
+// ── ADD TO CART ───────────────────────────────────────────────────
+modalBtn.addEventListener('click', ()=>{
+  if(currentProduct.sizes!=='none' && !selectedSize){
+    modalStatus.textContent='Please select a size first.';
+    return;
+  }
+  const key = (currentProduct.stripePrice||currentProduct.name)+'|'+(selectedSize||'N/A');
+  const existing = cart.find(i=>i.id===key);
+  if(existing){ existing.qty=Math.min(10,existing.qty+modalQty); }
+  else {
+    cart.push({
+      id:          key,
+      name:        currentProduct.name,
+      price:       currentProduct.price,
+      stripePrice: currentProduct.stripePrice,
+      size:        selectedSize||'N/A',
+      qty:         modalQty,
+      imgSrc:      currentProduct.imgSrc||null,
+    });
+  }
+  saveCart(); renderCart();
+
+  if(currentCard){ currentCard.classList.add('added-flash'); setTimeout(()=>currentCard.classList.remove('added-flash'),900); }
+  modalBtn.textContent='✓ Added!';
+  setTimeout(()=>{ closeModal(); openCart(); }, 600);
+});
+
+// ── CART CHECKOUT → STRIPE ────────────────────────────────────────
+document.getElementById('cart-checkout-btn').addEventListener('click', async ()=>{
+  const btn    = document.getElementById('cart-checkout-btn');
+  const status = document.getElementById('cart-checkout-status');
+  btn.disabled = true;
+  status.textContent = 'Redirecting to checkout...';
+  const lineItems = cart.map(item=>({
+    stripePrice: item.stripePrice,
+    productName: item.name+(item.size&&item.size!=='N/A'?' ('+item.size+')':''),
+    unitAmount:  item.price,
+    quantity:    item.qty,
+  }));
+  try{
+    const res = await fetch('/api/create-checkout-session',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({lineItems}),
+    });
+    const data = await res.json();
+    if(data.url){ window.location.href=data.url; }
+    else throw new Error('no url');
+  } catch{
+    status.textContent='Checkout not connected — make sure Stripe is set up.';
+    btn.disabled=false;
+  }
+});
+
+// ── INIT ──────────────────────────────────────────────────────────
+loadCart();
+renderCart();
+</script>
 
 </body>
 </html>
