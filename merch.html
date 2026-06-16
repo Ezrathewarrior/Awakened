@@ -310,6 +310,19 @@
     box-shadow: 0 8px 24px -8px rgba(231,76,60,0.5);
   }
   .modal-add-btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 32px -8px rgba(231,76,60,0.65); }
+  .modal-img{
+    width: 100%; aspect-ratio: 1/1; object-fit: cover;
+    border-radius: 8px; margin-bottom: 20px;
+    border: 1px solid var(--eclipse-edge);
+    background: linear-gradient(135deg, var(--indigo), #0d0d22);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .modal-img img{ width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; }
+  .modal-img .modal-img-placeholder{
+    width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+    opacity:0.15;
+  }
   .modal-note{ margin-top: 10px; font-size: 12px; color: var(--bone-dim); text-align: center; }
   .modal-status{ margin-top: 8px; font-size: 13px; color: var(--gold); text-align: center; min-height: 18px; }
 
@@ -420,6 +433,8 @@
         data-sizes="S,M,L,XL,2XL">
         <div class="product-img">
           <img src="images/Ezekiel-amir-shirt.png" alt="Awakened Logo Tee" />
+          <svg class="placeholder-icon" style="display:none" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          <span class="placeholder-label">Add product photo</span>
           <span class="product-badge new">New</span>
         </div>
         <div class="product-info">
@@ -606,6 +621,11 @@
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <button class="modal-close" id="modal-close">&#10005;</button>
+    <div class="modal-img" id="modal-img">
+      <div class="modal-img-placeholder">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+    </div>
     <div class="modal-category" id="modal-category"></div>
     <h3 id="modal-name"></h3>
     <div class="modal-price" id="modal-price"></div>
@@ -688,6 +708,7 @@
       stripePrice: card.dataset.stripePrice,
       sizes:       card.dataset.sizes,
       category:    card.querySelector('.product-category').textContent,
+      imgSrc:      card.querySelector('.product-img img') ? card.querySelector('.product-img img').src : null,
     };
     selectedSize = null;
     modalQty = 1;
@@ -698,6 +719,23 @@
     modalQtyVal.textContent = '1';
     modalStatus.textContent = '';
     updateModalBtn();
+
+    // Show product image in modal
+    const modalImgEl = document.getElementById('modal-img');
+    const cardImg = card.querySelector('.product-img img');
+    const cardSvg = card.querySelector('.product-img svg');
+    modalImgEl.innerHTML = '';
+    if (cardImg) {
+      const img = document.createElement('img');
+      img.src = cardImg.src;
+      img.alt = currentProduct.name;
+      modalImgEl.appendChild(img);
+    } else if (cardSvg) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'modal-img-placeholder';
+      placeholder.innerHTML = cardSvg.outerHTML;
+      modalImgEl.appendChild(placeholder);
+    }
 
     // Build size buttons
     modalSizes.innerHTML = '';
