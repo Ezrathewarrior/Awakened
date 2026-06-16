@@ -9,49 +9,58 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { quantity, stripePrice, productName, unitAmount } = req.body || {};
-    const qty = Math.max(1, Math.min(10, parseInt(quantity, 10) || 1));
+    const { quantity, stripePrice, productName, unitAmount, lineItems } = req.body || {};
+    let builtLineItems = [];
 
-    let lineItem;
-
-    if (stripePrice && stripePrice !== 'price_REPLACE_ME') {
-      // Merch product with a real Stripe Price ID
-      lineItem = { price: stripePrice, quantity: qty };
+    if (lineItems && Array.isArray(lineItems) && lineItems.length > 0) {
+      // CART: multiple items
+      builtLineItems = lineItems.map(item => {
+        const qty = Math.max(1, Math.min(10, parseInt(item.quantity, 10) || 1));
+        if (item.stripePrice && item.stripePrice !== 'price_REPLACE_ME') {
+          return { price: item.stripePrice, quantity: qty };
+        }
+        return {
+          price_data: {
+            currency: 'usd',
+            unit_amount: parseInt(item.unitAmount, 10),
+            product_data: { name: item.productName || 'Awakened Product' },
+          },
+          quantity: qty,
+        };
+      });
+    } else if (stripePrice && stripePrice !== 'price_REPLACE_ME') {
+      // Single item with real Stripe Price ID
+      builtLineItems = [{ price: stripePrice, quantity: Math.max(1, parseInt(quantity,10)||1) }];
     } else if (productName && unitAmount) {
-      // Merch product without a Price ID yet — build inline
-      lineItem = {
+      // Single item without Price ID
+      builtLineItems = [{
         price_data: {
           currency: 'usd',
           unit_amount: parseInt(unitAmount, 10),
           product_data: { name: productName },
         },
-        quantity: qty,
-      };
+        quantity: Math.max(1, parseInt(quantity,10)||1),
+      }];
     } else {
       // Default: comic book
-      lineItem = {
+      builtLineItems = [{
         price_data: {
           currency: 'usd',
           unit_amount: 2500,
-          product_data: {
-            name: 'Awakened: Beginnings (Print Edition)',
-            description: 'Issue 01 — Full-color print comic',
-          },
+          product_data: { name: 'Awakened: Beginnings (Print Edition)', description: 'Issue 01 — Full-color print comic' },
         },
-        quantity: qty,
-      };
+        quantity: Math.max(1, parseInt(quantity,10)||1),
+      }];
     }
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
-      line_items: [lineItem],
+      line_items: builtLineItems,
       shipping_address_collection: { allowed_countries: ['US'] },
-      shipping_options: [
-        // { shipping_rate: 'shr_xxxxxxxxxxxx' }, // uncomment and add your rate ID
-      ],
-      success_url: `${SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${SITE_URL}/index.html`,
+      // shipping_options: [{ shipping_rate: 'shr_xxxx' }],
+      success_url: `${SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}&cleared=1`,
+      cancel_url:  `${SITE_URL}/merch.html`,
     });
 
     return res.status(200).json({ url: session.url });
