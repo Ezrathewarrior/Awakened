@@ -974,6 +974,149 @@
 </div>
 
 <script>
+  // ============================================================
+  // GALLERY IMAGES
+  // To add more images: just drop the file in the images/ folder
+  // and add a new line here: { src: 'images/yourfile.jpg', label: 'Your Caption' }
+  // ============================================================
+  const galleryImages = [
+    { src: 'images/Prolong.jpg',                label: 'Mr. Prolong',             alt: 'A confident young man in a purple suit standing relaxed outdoors at night.' },
+    { src: 'images/Dad.jpg',                    label: 'Awakening',               alt: 'A man crackling with bright blue electrical energy as his power awakens.' },
+    { src: 'images/Ezekiel-scream.jpg',         label: 'Breaking Point',          alt: 'Close-up of a young man crying out in anguish, tears on his face.' },
+    { src: 'images/Selena.jpg',                 label: 'A Warning, Whispered',    alt: 'A woman with long beaded locs and striking red eyes.' },
+    { src: 'images/Social-Media-Art-peice.jpg', label: 'Two Men, All That Power', alt: 'Two characters facing off, showcasing their abilities.' },
+    { src: 'images/Burnitdown.jpg',             label: 'Burn It Down',            alt: 'A dramatic scene from Awakened.' },
+    // To add more images: drop the file in images/ and add a line here:
+    // { src: 'images/your-file.jpg', label: 'Caption', alt: 'Description' },
+  ];
+
+  // ============================================================
+  // CAROUSEL
+  // ============================================================
+  const track    = document.getElementById('carousel-track');
+  const dotsWrap = document.getElementById('carousel-dots');
+  const btnPrev  = document.getElementById('carousel-prev');
+  const btnNext  = document.getElementById('carousel-next');
+
+  let visibleCount = window.innerWidth <= 520 ? 1 : window.innerWidth <= 860 ? 2 : 4;
+  let currentIndex = 0;
+
+  function buildCarousel() {
+    track.innerHTML = '';
+    dotsWrap.innerHTML = '';
+
+    galleryImages.forEach((img, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      slide.innerHTML = `
+        <img src="${img.src}" alt="${img.alt}" loading="lazy" />
+        <span class="carousel-slide-label">${img.label}</span>
+      `;
+      slide.addEventListener('click', () => openLightbox(i));
+      track.appendChild(slide);
+    });
+
+    const totalDots = Math.ceil(galleryImages.length / visibleCount);
+    for (let d = 0; d < totalDots; d++) {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (d === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Go to slide group ${d + 1}`);
+      dot.addEventListener('click', () => goTo(d * visibleCount));
+      dotsWrap.appendChild(dot);
+    }
+
+    goTo(0);
+  }
+
+  function getSlideWidth() {
+    const slide = track.querySelector('.carousel-slide');
+    if (!slide) return 0;
+    return slide.offsetWidth + 16; // width + gap
+  }
+
+  function goTo(index) {
+    const maxIndex = Math.max(0, galleryImages.length - visibleCount);
+    currentIndex = Math.max(0, Math.min(index, maxIndex));
+    track.style.transform = `translateX(-${currentIndex * getSlideWidth()}px)`;
+
+    const activeDot = Math.floor(currentIndex / visibleCount);
+    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === activeDot);
+    });
+
+    btnPrev.disabled = currentIndex === 0;
+    btnNext.disabled = currentIndex >= maxIndex;
+  }
+
+  btnPrev.addEventListener('click', () => goTo(currentIndex - visibleCount));
+  btnNext.addEventListener('click', () => goTo(currentIndex + visibleCount));
+
+  // Swipe support
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? goTo(currentIndex + 1) : goTo(currentIndex - 1);
+  });
+
+  // Rebuild on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      visibleCount = window.innerWidth <= 520 ? 1 : window.innerWidth <= 860 ? 2 : 4;
+      buildCarousel();
+    }, 150);
+  });
+
+  buildCarousel();
+
+  // ============================================================
+  // LIGHTBOX
+  // ============================================================
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lb-img');
+  const lbLabel  = document.getElementById('lb-label');
+  let lbIndex    = 0;
+
+  function openLightbox(i) {
+    lbIndex = i;
+    updateLightbox();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function updateLightbox() {
+    const img = galleryImages[lbIndex];
+    lbImg.src   = img.src;
+    lbImg.alt   = img.alt;
+    lbLabel.textContent = img.label;
+  }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev').addEventListener('click', () => {
+    lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+  });
+  document.getElementById('lb-next').addEventListener('click', () => {
+    lbIndex = (lbIndex + 1) % galleryImages.length;
+    updateLightbox();
+  });
+
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  { lbIndex = (lbIndex - 1 + galleryImages.length) % galleryImages.length; updateLightbox(); }
+    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % galleryImages.length; updateLightbox(); }
+  });
+
 
 
 
