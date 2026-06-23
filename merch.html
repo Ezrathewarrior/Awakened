@@ -516,23 +516,28 @@
     transition: border-color 0.1s, box-shadow 0.1s !important;
   }
 
-</style>
 
-<style>
-.hamburger{display:none;background:none;border:none;color:#f4ede0;font-size:28px;cursor:pointer}
-@media(max-width:768px){
-.nav-links,.social-links{display:none!important}
-.hamburger{display:block}
-.mobile-menu{display:none;flex-direction:column;gap:12px;padding:16px;background:#0a0a14}
-.mobile-menu.open{display:flex}
-.product-grid,.hero-grid,.story-grid,.buy-card,.social-feed-grid{
-grid-template-columns:1fr!important;
+.mobile-menu-toggle{display:none;background:none;border:1px solid var(--eclipse-edge);color:var(--bone);padding:8px 12px;border-radius:6px;cursor:pointer}
+@media (max-width:768px){
+  .social-bar-inner{flex-wrap:wrap}
+  .nav-left{width:100%;justify-content:space-between}
+  .mobile-menu-toggle{display:block}
+  .social-links{
+    display:none;
+    width:100%;
+    flex-direction:column;
+    align-items:stretch;
+    margin-top:12px;
+  }
+  .social-links.open{display:flex}
+  .social-link,.cart-nav-btn{width:100%;justify-content:center}
+  .container{padding:0 16px}
+  .carousel-btn{display:none}
+  .buy-card,.hero-grid,.story-grid,.social-feed-grid{grid-template-columns:1fr !important}
+  img{max-width:100%;height:auto}
 }
-.container{padding:0 16px!important}
-img{max-width:100%;height:auto}
-}
-</style>
 
+</style>
 </head>
 <body>
 
@@ -565,7 +570,7 @@ img{max-width:100%;height:auto}
       Cart <span class="cart-count" id="cart-count">0</span>
     </button>
   </div>
-<button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">☰</button></nav><div class="mobile-menu"><a href="index.html">Comic</a><a href="merch.html">Merch</a></div>
+</nav>
 
 <!-- PAGE HEADER -->
 <div class="page-header">
@@ -1040,6 +1045,17 @@ document.getElementById('cart-checkout-btn').addEventListener('click', async ()=
 // ── INIT ──────────────────────────────────────────────────────────
 loadCart();
 renderCart();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const btn=document.getElementById('mobileMenuBtn');
+ const links=document.querySelector('.social-links');
+ if(btn && links){
+   btn.addEventListener('click',()=>links.classList.toggle('open'));
+ }
+});
 </script>
 
 </body>
