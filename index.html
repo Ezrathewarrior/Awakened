@@ -698,6 +698,22 @@
   .cart-checkout-status{ margin-top:7px; font-size:13px; color:var(--gold); text-align:center; min-height:18px; }
 
 </style>
+
+<style>
+.hamburger{display:none;background:none;border:none;color:#f4ede0;font-size:28px;cursor:pointer}
+@media(max-width:768px){
+.nav-links,.social-links{display:none!important}
+.hamburger{display:block}
+.mobile-menu{display:none;flex-direction:column;gap:12px;padding:16px;background:#0a0a14}
+.mobile-menu.open{display:flex}
+.product-grid,.hero-grid,.story-grid,.buy-card,.social-feed-grid{
+grid-template-columns:1fr!important;
+}
+.container{padding:0 16px!important}
+img{max-width:100%;height:auto}
+}
+</style>
+
 </head>
 <body>
 
@@ -729,7 +745,7 @@
       Cart <span class="cart-count" id="cart-count">0</span>
     </button>
   </div>
-</nav>
+<button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">☰</button></nav><div class="mobile-menu"><a href="index.html">Comic</a><a href="merch.html">Merch</a></div>
 
 <header class="hero">
   <div class="container">
