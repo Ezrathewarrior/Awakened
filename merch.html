@@ -516,27 +516,6 @@
     transition: border-color 0.1s, box-shadow 0.1s !important;
   }
 
-
-.mobile-menu-toggle{display:none;background:none;border:1px solid var(--eclipse-edge);color:var(--bone);padding:8px 12px;border-radius:6px;cursor:pointer}
-@media (max-width:768px){
-  .social-bar-inner{flex-wrap:wrap}
-  .nav-left{width:100%;justify-content:space-between}
-  .mobile-menu-toggle{display:block}
-  .social-links{
-    display:none;
-    width:100%;
-    flex-direction:column;
-    align-items:stretch;
-    margin-top:12px;
-  }
-  .social-links.open{display:flex}
-  .social-link,.cart-nav-btn{width:100%;justify-content:center}
-  .container{padding:0 16px}
-  .carousel-btn{display:none}
-  .buy-card,.hero-grid,.story-grid,.social-feed-grid{grid-template-columns:1fr !important}
-  img{max-width:100%;height:auto}
-}
-
 </style>
 </head>
 <body>
@@ -661,8 +640,7 @@
         data-name="Awakened Pullover Hoodie"
         data-price="6000"
         data-stripe-price="price_1TinvcKZaxtIdT8ii60bjG3a"
-        data-sizes="S,M,L,XL,2XL"
-        data-colors="Black,White,Sandstone,Bone,Charcoal,Grey,Navy">
+        data-sizes="S,M,L,XL,2XL">
         <div class="product-img">
           <img src="images/Awakened-hoodie.png" alt="Awakened Logo Tee" />
           
@@ -683,7 +661,7 @@
       <div class="product-card"
         data-category="notebook"
         data-name="Awakened Eclipse Spiral Notebook — Ruled Journal for Write"
-        data-price="1400"
+        data-price="2000"
         data-stripe-price="price_1TinwhKZaxtIdT8i0tY3xUL2"
         data-sizes="none">
         <div class="product-img">
@@ -782,7 +760,6 @@
       <a href="https://www.youtube.com/@RedBladeStudioz" target="_blank" rel="noopener">YouTube</a>
     </div>
     <p>© 2026 Awakened Comics · Red Blade Studioz. All rights reserved. US shipping only.</p>
-    <p> class="value">Ships within in 5–7 business days *Delivery may take two weeks during launch</p>
   </div>
 </footer>
 
@@ -1030,34 +1007,42 @@ document.getElementById('cart-checkout-btn').addEventListener('click', async ()=
     unitAmount:  item.price,
     quantity:    item.qty,
   }));
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(()=>controller.abort(), 12000);
+
   try{
     const res = await fetch('/api/create-checkout-session',{
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({lineItems}),
+      signal: controller.signal
     });
-    const data = await res.json();
-    if(data.url){ window.location.href=data.url; }
-    else throw new Error('no url');
-  } catch{
-    status.textContent = (data && data.error) ? 'Error: '+data.error : 'Checkout not connected — make sure Stripe is set up.';
-    btn.disabled=false;
+    clearTimeout(timeoutId);
+
+    const data = await res.json().catch(()=>({}));
+
+    if(!res.ok){
+      throw new Error(data.error || ('Server returned status '+res.status));
+    }
+    if(data.url){
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'No checkout URL returned');
+    }
+  } catch(err){
+    clearTimeout(timeoutId);
+    if(err.name === 'AbortError'){
+      status.textContent = 'Request timed out. Check STRIPE_SECRET_KEY and SITE_URL in Vercel env variables.';
+    } else {
+      status.textContent = 'Error: ' + (err.message || 'Checkout failed.');
+    }
+    btn.disabled = false;
   }
 });
 
 // ── INIT ──────────────────────────────────────────────────────────
 loadCart();
 renderCart();
-</script>
-
-
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
- const btn=document.getElementById('mobileMenuBtn');
- const links=document.querySelector('.social-links');
- if(btn && links){
-   btn.addEventListener('click',()=>links.classList.toggle('open'));
- }
-});
 </script>
 
 </body>
